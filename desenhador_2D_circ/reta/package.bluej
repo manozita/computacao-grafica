@@ -1,16 +1,16 @@
 #BlueJ package file
-dependency1.from=TestaReta
-dependency1.to=Reta
+dependency1.from=FiguraRetas
+dependency1.to=RetaGr
 dependency1.type=UsesDependency
-dependency2.from=FiguraRetas
-dependency2.to=RetaGr
+dependency2.from=TestaReta
+dependency2.to=Reta
 dependency2.type=UsesDependency
 objectbench.height=137
 objectbench.width=1342
 package.divider.horizontal=0.5707591377694471
 package.divider.vertical=0.7763975155279503
 package.editor.height=493
-package.editor.width=1252
+package.editor.width=1220
 package.editor.x=0
 package.editor.y=0
 package.frame.height=744

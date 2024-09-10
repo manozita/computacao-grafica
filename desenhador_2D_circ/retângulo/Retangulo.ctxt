@@ -1,0 +1,20 @@
+#BlueJ class context
+comment0.target=Retangulo
+comment0.text=\r\n\ Escreva\ uma\ descri\u00E7\u00E3o\ da\ classe\ Retangulo\ aqui.\r\n\ \r\n\ @author\ (seu\ nome)\ \r\n\ @version\ (um\ n\u00FAmero\ da\ vers\u00E3o\ ou\ uma\ data)\r\n
+comment1.params=x1\ y1\ x2\ y2
+comment1.target=Retangulo(int,\ int,\ int,\ int)
+comment2.params=x1\ y1\ x2\ y2
+comment2.target=Retangulo(double,\ double,\ double,\ double)
+comment3.params=p1\ p2
+comment3.target=Retangulo(ponto.Ponto,\ ponto.Ponto)
+comment4.params=r
+comment4.target=Retangulo(Retangulo)
+comment5.params=
+comment5.target=ponto.Ponto\ getP1()
+comment6.params=
+comment6.target=ponto.Ponto\ getP2()
+comment7.params=p1
+comment7.target=void\ setP1(ponto.Ponto)
+comment8.params=p2
+comment8.target=void\ setP2(ponto.Ponto)
+numComments=9
