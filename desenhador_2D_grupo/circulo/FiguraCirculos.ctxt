@@ -1,0 +1,10 @@
+#BlueJ class context
+comment0.target=FiguraCirculos
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ FiguraCirculo\ here.\r\n\r\n\ @author\ (your\ name)\r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=g\ x1\ y1\ x2\ y2\ nome\ esp\ cor
+comment1.target=void\ desenharCirculo(java.awt.Graphics,\ int,\ int,\ int,\ int,\ java.lang.String,\ int,\ java.awt.Color)
+comment1.text=\r\n\ Desenha\ uma\ Circulo\ de\ acordo\ com\ os\ pontos\ p1\ e\ p2\r\n\r\n\ @param\ g\ biblioteca\ para\ desenhar\ o\ primitivo\ grafico\r\n\ @param\ x1\ coordenada\ x\ de\ p1\r\n\ @param\ y1\ coordenada\ y\ de\ p1\r\n\ @param\ x2\ coordenada\ x\ de\ p2\r\n\ @param\ y2\ coordenada\ y\ de\ p2\r\n\ @param\ nome\ nome\ da\ Circulo\r\n\ @param\ esp\ espessura\ da\ Circulo\r\n\ @param\ cor\ cor\ da\ Circulo\r\n
+comment2.params=g\ qtde\ esp
+comment2.target=void\ desenharCirculos(java.awt.Graphics,\ int,\ int)
+comment2.text=\r\n\ Desenha\ varias\ Circulos\ na\ area\ de\ desenho\r\n\r\n\ @param\ g\ biblioteca\ grafica\ para\ desenhar\ os\ primitivos\r\n\ @param\ qtde\ quantidade\ de\ Circulos\r\n\ @param\ esp\ espessura\ das\ Circulos\r\n
+numComments=3
