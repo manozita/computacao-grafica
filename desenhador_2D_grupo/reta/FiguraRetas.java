@@ -23,7 +23,7 @@ public class FiguraRetas {
      * @param esp espessura da reta
      * @param cor cor da reta
      */
-    public static void desenharReta(Graphics g, int x1, int y1, int x2, int y2, String nome, int esp, Color cor){
+    public static void desenharReta (Graphics g, int x1, int y1, int x2, int y2, String nome, int esp, Color cor) {
        RetaGr r = new RetaGr(x1, y1, x2, y2, cor, nome, esp);
        r.desenharReta(g );
     }
@@ -35,8 +35,7 @@ public class FiguraRetas {
      * @param qtde quantidade de retas
      * @param esp espessura das retas
      */
-    public static void desenharRetas(Graphics g, int qtde, int esp){
-
+    public static void desenharRetas (Graphics g, int qtde, int esp) {
         for(int i=0; i < qtde; i++) {
             int x1 = (int) (Math.random() * 801);
             int y1 = (int) (Math.random() * 801);

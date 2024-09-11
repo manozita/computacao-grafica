@@ -16,115 +16,101 @@ import javax.swing.JToolBar;
  * @version 20220815
  */
 class Gui extends JFrame {
-    // Tipo Atual de primitivo
-    private TipoPrimitivo tipoAtual = TipoPrimitivo.NENHUM;
+    private TipoPrimitivo tipoAtual = TipoPrimitivo.NENHUM; // Tipo atual de primitivo como nenhum
+    private Color corAtual = Color.BLACK;                   // Cor atual como preto
+    private int espAtual = 1;                               // Espessura atual do primitivo como 1
 
-    // Cor atual
-    private Color corAtual = Color.BLACK;
-
-    // Espessura atual do primitivo
-    private int espAtual = 1;
-
-    // Componentes de GUI
-    // barra de menu (inserir componente)
-    private JToolBar barraComandos = new JToolBar();
-
-    // mensagens
-    private JLabel msg = new JLabel("Msg: ");
-
-    // Painel de desenho
-    private PainelDesenho areaDesenho = new PainelDesenho(msg, tipoAtual, corAtual, 10);
-
-    // Botoes
+    // COMPONENTES DO GUI
+    private JToolBar barraComandos = new JToolBar();                                     // Barra de menu (inserir componente)
+    private JLabel msg = new JLabel("Msg: ");                                            // Mensagens
+    private PainelDesenho areaDesenho = new PainelDesenho(msg, tipoAtual, corAtual, 10); // Painel de desenho
+    // Botões
     private JButton jbPonto = new JButton("Ponto");
     private JButton jbReta = new JButton("Reta");
-    private JButton jbCirculo = new JButton("Circulo");
-    private JButton jbRetangulo = new JButton("Retangulo");
-    private JButton jbTriangulo = new JButton("Triangulo");
+    private JButton jbCirculo = new JButton("Círculo");
+    private JButton jbRetangulo = new JButton("Retângulo");
+    private JButton jbTriangulo = new JButton("Triângulo");
     private JButton jbLimpar = new JButton("Limpar");
     private JButton jbCor = new JButton("Cor");
     private JButton jbSair = new JButton("Sair");
 
     // Entrada (slider) para definir espessura dos primitivos
-    private JLabel jlEsp = new JLabel("   Espessura: " + String.format("%-5s", 1));
+    private JLabel jlEsp = new JLabel("   Espessura: " + String.format("%-5s", 1)); // Nome para o slider
     private JSlider jsEsp = new JSlider(1, 50, 1);
 
     /**
-     * Constroi a GUI
-     *
-     * @param larg largura da janela
-     * @param alt altura da janela
-     */
+    * Constroi a GUI
+    *
+    * @param larg largura da janela
+    * @param alt altura da janela
+    */
     public Gui(int larg, int alt) {
-        /**
-         * Definicoes de janela
-         */
-        super("Testa Primitivos");
+        // DEFINIÇÕES DA JANELA
+        super("TESTE DE PRIMITIVOS");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(larg, alt);
         setVisible(true);
         setResizable(false);
 
-        // Adicionando os componentes
+        // COMPONENETES
         barraComandos.add(jbPonto);
         barraComandos.add(jbReta);
         barraComandos.add(jbCirculo);
         barraComandos.add(jbRetangulo);
         barraComandos.add(jbTriangulo);
-        barraComandos.add(jbLimpar); // Botao de Limpar
-        barraComandos.add(jbCor); // Botao de Cores
+        barraComandos.add(jbLimpar);    // Botão de Limpar
+        barraComandos.add(jbCor);       // Botão de Cores
 
-        barraComandos.add(jlEsp); // Label para espessura
-        barraComandos.add(jsEsp);    // Slider para espacamento
-        areaDesenho.setEsp(espAtual); // define a espessura inicial
-        barraComandos.add(jbSair); // Botao de Cores
+        barraComandos.add(jlEsp);       // Label para espessura
+        barraComandos.add(jsEsp);       // Slider para espaçamento
+        areaDesenho.setEsp(espAtual);   // Define a espessura inicial
+        barraComandos.add(jbSair);      // Botao para sair
 
-        // adiciona os componentes com os respectivos layouts
+        // Adiciona os componentes com os respectivos layouts
         add(barraComandos, BorderLayout.NORTH);                
         add(areaDesenho, BorderLayout.CENTER);                
         add(msg, BorderLayout.SOUTH);
 
-        // Adiciona "tratador" ("ouvidor") de eventos para 
-        // cada componente
-        jbPonto.addActionListener(e -> {
+        // TRATAMENTO DE EVENTOS PARA CADA COMPONENTE
+        jbPonto.addActionListener(e -> {     // Botão de ponto
             tipoAtual = TipoPrimitivo.PONTO;
             areaDesenho.setTipo(tipoAtual);
         });        
-        jbReta.addActionListener(e -> {
+        jbReta.addActionListener(e -> {      // Botão de reta
             tipoAtual = TipoPrimitivo.RETA;
             areaDesenho.setTipo(tipoAtual);
         });        
-        jbCirculo.addActionListener(e -> {
+        jbCirculo.addActionListener(e -> {   // Botão de círculo
             tipoAtual = TipoPrimitivo.CIRCULO;
             areaDesenho.setTipo(tipoAtual);
         });        
-        jbRetangulo.addActionListener(e -> {
+        jbRetangulo.addActionListener(e -> { // Botão de retângulo
             tipoAtual = TipoPrimitivo.RETANGULO;
             areaDesenho.setTipo(tipoAtual);
         }); 
-        jbTriangulo.addActionListener(e -> {
+        jbTriangulo.addActionListener(e -> { // Botão de triângulo
             tipoAtual = TipoPrimitivo.TRIANGULO;
             areaDesenho.setTipo(tipoAtual);
         }); 
-        jbLimpar.addActionListener(e -> {
+        jbLimpar.addActionListener(e -> {    // Botão de limpar
             areaDesenho.removeAll();
-            jsEsp.setValue(1); // inicia slider (necessario para limpar ultimo primitivoda tela) 
-            repaint();        
-        });        
-        jbCor.addActionListener(e -> {
-            Color c = JColorChooser.showDialog(null, "Escolha uma cor", msg.getForeground()); 
-            if (c != null){ 
-                corAtual = c; // pega do chooserColor 
+            jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivoda tela) 
+            repaint();
+        });
+        jbCor.addActionListener(e -> {       // Botão de escolha de cor
+            Color novaCor = JColorChooser.showDialog(null, "Escolha uma cor", msg.getForeground()); 
+            if (novaCor != null){ 
+                corAtual = novaCor; // Pega do chooserColor 
             }
             areaDesenho.setCorAtual(corAtual); // cor atual
         });  
-        jsEsp.addChangeListener(e -> {
+        jsEsp.addChangeListener(e -> {      // Slider de espessura
             espAtual = jsEsp.getValue();
             jlEsp.setText("   Espessura: " + String.format("%-5s", espAtual));
             areaDesenho.setEsp(espAtual);        
-        });        
+        });
 
-        jbSair.addActionListener(e -> {
+        jbSair.addActionListener(e -> {     // Botão de sair
             System.exit(0);
         });        
     }

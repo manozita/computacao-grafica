@@ -1,7 +1,7 @@
 package ponto;
  
 /**
- * Representacao de ponto matematico
+ * Representação de ponto matemático
  * 
  * @author Julio Arakaki
  * @version 20220815

@@ -4,140 +4,82 @@ import java.awt.Color;
 import java.awt.Graphics;
 
 public class PontoGr extends Ponto {
-    Color corPto = Color.BLACK; // cor do ponto
-    String nomePto = ""; // nome do ponto
-    Color corNomePto  = Color.BLACK; // cor do nome (string) do ponto  
-    int diametro = 1; // diametro do ponto, default = 1
+    Color corPto = Color.BLACK;         // Cor do ponto
+    String nomePto = "";                // Nome do ponto
+    Color corNomePto  = Color.BLACK;    // Cor do nome (string) do ponto  
+    int diametro = 1;                   // Diâmetro do ponto, default = 1
 
-    PontoGr(int x, int y){
+    // CONSTRUTORES
+    public PontoGr (int x, int y) { // Entrada com duas coordenadas x e y para o ponto
         super((double)x, (double)y);
-        setCorPto(Color.black);     
-        setCorNomePto(Color.black);     
-        setNomePto("");     
     }
-
-    PontoGr(int x, int y, Color cor){
+    public PontoGr (int x, int y, Color corPto) { // Entrada com duas coordenadas e cor do ponto
         super((double)x, (double)y);
-        setCorPto(cor);     
-        setCorNomePto(Color.black);     
-        setNomePto("");     
-    }
-
-    /**
-     * Constroi um ponto na posicao x, y e com os atributos
-     * 
-     * @param x coordenada x
-     * @param y coordenada y
-     * @param corPonto corReta do ponto a ser construido
-     * @param diametro diametro do ponto
-     */
-    public PontoGr(int x, int y, Color corPonto, int diametro){
-        this(x, y, corPonto);
-        setDiametro(diametro);
-    }
-
-    /**
-     * Constroi um ponto na posicao x, y e com os atributos
-     * 
-     * @param x coordenada x
-     * @param y coordenada y
-     * @param corPonto corReta do ponto a ser construido
-     * @param nomePonto nome do ponto
-     * @param diametro diametro do ponto
-     */
-    public PontoGr(int x, int y, Color corPonto, String nomePonto, int diametro){
-        this(x, y, corPonto, diametro);
-        setNomePto(nomePonto);
-    }
-    PontoGr(int x, int y, Color cor, String str){
-        super((double)x, (double)y);
-        setCorPto(cor);     
-        setCorNomePto(Color.black);     
-        setNomePto(str);     
-    }
-
-    PontoGr(PontoGr p2d, Color cor){
-        super(p2d);     
-        setCorPto(cor);     
-        setCorNomePto(Color.black);     
-        setNomePto("");     
-    }
-
-    PontoGr(){
-        super();     
-        setCorPto(Color.black);     
-        setCorNomePto(Color.black);     
-        setNomePto("");     
-    }
-
-
-    /**
-     * @return the corPto
-     */
-    public Color getCorPto() {
-        return corPto;
-    }
-
-    /**
-     * @param corPto the corPto to set
-     */
-    public void setCorPto(Color corPto) {
         this.corPto = corPto;
     }
-
-    /**
-     * @return the nomePto
-     */
-    public String getNomePto() {
-        return nomePto;
-    }
-
-    /**
-     * @param nomePto the nomePto to set
-     */
-    public void setNomePto(String nomePto) {
-        this.nomePto = nomePto;
-    }
-
-    /**
-     * @return the corNomePto
-     */
-    public Color getCorNomePto() {
-        return corNomePto;
-    }
-
-    /**
-     * @param corNomePto the corNomePto to set
-     */
-    public void setCorNomePto(Color corNomePto) {
-        this.corNomePto = corNomePto;
-    }
-
-    /**
-     * @return the diametro
-     */
-    public int getDiametro() {
-        return diametro;
-    }
-
-    /**
-     * @param diametro the diametro to set
-     */
-    public void setDiametro(int diametro) {
+    public PontoGr (int x, int y, Color corPto, int diametro) { // Entrada com duas coordenadas, cor e diametro do ponto
+        this(x, y, corPto);
         this.diametro = diametro;
     }
+    public PontoGr (int x, int y, Color corPto, String nomePto, int diametro) { // Entrada com duas coordenadas, cor, nome e diametro do ponto
+        this(x, y, corPto, diametro);
+        this.nomePto = nomePto;
+    }
+    public PontoGr (int x, int y, Color corPto, String nomePto) { // Entrada com duas coordenadas, cor e nome do ponto
+        super((double)x, (double)y);
+        this.corPto = corPto;
+        this.nomePto = nomePto; 
+    }
+    public PontoGr (PontoGr p2d, Color corPto) { // Entrada com um ponto e cor do ponto
+        super(p2d);    
+        this.corPto = corPto;   
+    }
+    public PontoGr() { // Entrada sem parâmetros
+        super();       
+    }
 
     /**
-     * desenha um ponto utilizando o oval 
+     * GETTERS E SETTERS
      * 
-     * @param g contexto grafico
+     * Para cor, nome, cor do nome e diâmetro
      */
-    public void desenharPonto(Graphics g){
-        // desenha ponto como um oval
+    public Color getCorPto() {                    // Retorna a cor do ponto
+        return corPto;
+    }
+    public void setCorPto (Color corPto) {        // Altera a cor do ponto
+        this.corPto = corPto;
+    }
+    public String getNomePto() {                  // Retorna o nome do ponto
+        return nomePto;
+    }
+    public void setNomePto(String nomePto) {      // Altera o nome do ponto
+        this.nomePto = nomePto;
+    }
+    public Color getCorNomePto() {                // Retorna a cor do nome do ponto
+        return corNomePto;
+    }
+    public void setCorNomePto(Color corNomePto) { // Altera a cor do nome do ponto
+        this.corNomePto = corNomePto;
+    }
+    public int getDiametro() {                    // Retorna o diâmetro do ponto
+        return diametro;
+    }
+    public void setDiametro(int diametro) {       // Altera o diâmetro do ponto
+        this.diametro = diametro;
+    }
+    
+    /**
+     * MÉTODO desenharPonto
+     *
+     * Desenha um novo ponto e seu nome
+     * @param g Um parâmetro
+     */
+    public void desenharPonto(Graphics g) {
+        // Desenha ponto como um oval
         g.setColor(getCorPto());
         g.fillOval((int)getX() -(getDiametro()/2), (int)getY() - (getDiametro()/2), getDiametro(), getDiametro());
 
-        // desenha nome do ponto
+        // Desenha nome do ponto
         g.setColor(getCorNomePto());
         g.drawString(getNomePto(), (int)getX() + getDiametro(), (int)getY());
     }
