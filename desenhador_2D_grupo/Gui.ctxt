@@ -1,6 +1,0 @@
-#BlueJ class context
-comment0.target=Gui
-comment1.params=larg\ alt
-comment1.target=Gui(int,\ int)
-comment1.text=\n\ Constroi\ a\ GUI\n\n\ @param\ larg\ largura\ da\ janela\n\ @param\ alt\ altura\ da\ janela\n
-numComments=2
