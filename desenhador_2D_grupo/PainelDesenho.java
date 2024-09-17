@@ -25,10 +25,9 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     int esp;                    // Espessura, diâmetro do ponto
 
     int x, y;                   // Coordenadas para o PONTO
-    int x1, y1, x2, y2, x3, y3; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
+    int x1, y1, x2, y2, x3, y3, xant=0, yant=0; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
     int clickCount = 0;         // Contador de cliques para o triângulo
     boolean primeiraVez = true; // Verifica se foi o primeiro click do mouse, para construção das figuras
-
 
     /**
      * Constroi o painel de desenho
@@ -57,24 +56,31 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void setTipo (TipoPrimitivo tipo) {      // Altera o valor do tipo primitivo
         this.tipo = tipo;
     }
+
     public TipoPrimitivo getTipo () {               // Retorna o valor do tipo primitivo
         return this.tipo;
     }
+
     public void setEsp (int esp) {                  // Altera o valor da espessura
         this.esp = esp;
     }
+
     public int getEsp () {                          // Retorna o valor da espessura
         return this.esp;
     }
+
     public void setCorAtual (Color corAtual) {      // Altera o valor da cor atual
         this.corAtual = corAtual;
     }
+
     public Color getCorAtual () {                   // Retorna o valor da cor atual
         return this.corAtual;
     }
+
     public void setMsg (JLabel msg) {               // Altera o valor da mensagem exibida no rodapé
         this.msg = msg;
     }
+
     public JLabel getMsg () {                       // Retorna o valor da mensagem exibida no rodapé
         return this.msg;
     }
@@ -85,6 +91,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param g biblioteca para desenhar em modo gráfico
      */
     public void paintComponent(Graphics g) {   
+        apagarPrimitivos(g);
         desenharPrimitivos(g);
     }
 
@@ -95,13 +102,11 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      */
     public void mousePressed(MouseEvent e) { 
         Graphics g = getGraphics();
-        
         if (tipo == TipoPrimitivo.PONTO) { // O ponto requer UM único click do mouse
             x = e.getX();
             y = e.getY();
             paint(g);       // Pega as coordenadas e pinta um ponto
         } else if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO || tipo == TipoPrimitivo.RETANGULO){ // DOIS clicks do mouse
-            
             if (primeiraVez == true) { // Se for o primeiro click do mouse
                 x1 = (int)e.getX();
                 y1 = (int)e.getY();
@@ -112,7 +117,6 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 primeiraVez = true;  // Reinicia a variável para o próximo ponto
                 paint(g);   // Pega as coordenadas e faz a figura
             }
-            
         } else if(tipo == TipoPrimitivo.TRIANGULO) { // TRÊS clicks do mouse
             // Nova lógica para o triângulo
             if (clickCount == 0) {
@@ -130,20 +134,49 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 paint(g); // Pega as coordenadas e faz a figura
             }
         }
-        
-        
     }     
 
-    // EVENTOS DO MOUSE
-    public void mouseReleased(MouseEvent e) { 
-    }           
+    // EVENTOS DO MOUSE          
     public void mouseClicked(MouseEvent e) {
     }
+
     public void mouseEntered(MouseEvent e) {
     }
+
     public void mouseExited(MouseEvent e) {
     }
+
+    /**
+     * Evento mouseReleased: elástico
+     *
+     * @param e dados do evento do mouse
+     */
+    public void mouseReleased(MouseEvent e) { 
+        if (tipo != TipoPrimitivo.TRIANGULO) {
+            Graphics g = getGraphics();
+            x2 = (int)e.getX();
+            y2 = (int)e.getY();
+            primeiraVez = true;
+            this.msg.setText("("+e.getX() + ", " + e.getY() + ") - " + getTipo());
+            paint(g);
+        }
+    } 
+
+    /**
+     * Evento mouseDragged: elástico
+     *
+     * @param e dados do evento do mouse
+     */
     public void mouseDragged(MouseEvent e) {
+        if (tipo != TipoPrimitivo.TRIANGULO) {
+            Graphics g = getGraphics();
+            xant = x2;
+            yant = y2;
+            x2 = (int)e.getX();
+            y2 = (int)e.getY();
+            this.msg.setText("("+e.getX() + ", " + e.getY() + ") - " + getTipo());
+            paint(g);
+        }
     }
 
     /**
@@ -177,6 +210,26 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         }
         else if (tipo==TipoPrimitivo.TRIANGULO) {   // Desenha o triângulo
             FiguraRetas.desenharTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getCorAtual());
+        }
+    }
+
+    /**
+     * Apaga os primitivos anteriores
+     *
+     * @param g biblioteca para desenhar em modo grafico
+     */
+    public void apagarPrimitivos(Graphics g){
+        if (tipo == TipoPrimitivo.RETA) {           // Apaga a reta
+            FiguraRetas.desenharReta(g, x1, y1, xant, yant, "", getEsp(), getBackground());
+        }
+        else if (tipo==TipoPrimitivo.CIRCULO) {     // Desenha o círculo
+            FiguraCirculos.desenharCirculo(g, x1, y1, xant, yant, "", getEsp(), getBackground());
+        }
+        else if (tipo==TipoPrimitivo.RETANGULO) {   // Desenha o retângulo
+            FiguraRetas.desenharRetangulo(g, x1, y1, xant, yant, "", getEsp(), getBackground());
+        }
+        else if (tipo==TipoPrimitivo.TRIANGULO) {   // Desenha o triângulo
+            //FiguraRetas.desenharTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getBackground());
         }
     }
 }
