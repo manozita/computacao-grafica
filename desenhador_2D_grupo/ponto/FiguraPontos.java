@@ -1,6 +1,7 @@
 package ponto;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 
 /**
  * Contém métodos para desenhar figuras com ponto
@@ -9,6 +10,7 @@ import java.awt.Graphics;
  * @version 20220815
  */
 public class FiguraPontos {
+    public static ArrayList Pontos = new ArrayList();
     /**
      * Desenha um ponto na tela
      * @param g biblioteca grafica para desenhar elementos gráficos
@@ -25,24 +27,22 @@ public class FiguraPontos {
         PontoGr p = new PontoGr(x, y, cor, nome, diametro);
         p.desenharPonto(g);
     }
+    
+    public static void redesenharPonto(Graphics g, PontoGr p){
+        int x = (int)p.getX();
+        int y = (int)p.getY();
+        Color cor = p.getCorPto();
+        String nome = p.getNomePto();
+        int diametro = p.getDiametro();
 
-    /**
-     * Desenha vários pontos na tela com cores diferentes
-     * @param g biblioteca grafica para desenhar elementos gráficos
-     * @param qtde quantidade de pontos
-     * @param diametro diametro dos pontos
-     */
-    public static void desenharPontos(Graphics g, int qtde, int diametro) {
-        for(int i=0; i < qtde; i++) {
-            int x = (int) (Math.random() * 801);
-            int y = (int) (Math.random() * 801);
-
-            // R, G e B aleatório
-            Color cor = new Color((int) (Math.random() * 256),  
-                    (int) (Math.random() * 256),  
-                    (int) (Math.random() * 256));
-            PontoGr p = new PontoGr(x, y, cor, diametro);
-            p.desenharPonto(g);
-        }
+        PontoGr pg = new PontoGr(x, y, cor, nome, diametro);
+        pg.desenharPonto(g);
+    }
+    
+    public static void guardarPonto(Graphics g, int x1, int y1, String nome, int esp, Color cor)
+    {
+        PontoGr r = new PontoGr(x1, y1, cor, nome, esp);
+        Pontos.add(r);
+        System.out.println(Pontos.isEmpty());
     }
 }

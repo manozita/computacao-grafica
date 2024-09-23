@@ -2,6 +2,8 @@ package circulo;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
+
 /**
  * Write a description of class FiguraCirculo here.
  *
@@ -10,6 +12,7 @@ import java.awt.Graphics;
  */
 public class FiguraCirculos
 {
+    public static ArrayList Circulos = new ArrayList();
     /**
      * Desenha uma Circulo de acordo com os pontos p1 e p2
      *
@@ -29,29 +32,18 @@ public class FiguraCirculos
        r.desenharCirculoSim(g);
     }
 
-    /**
-     * Desenha varias Circulos na area de desenho
-     *
-     * @param g biblioteca grafica para desenhar os primitivos
-     * @param qtde quantidade de Circulos
-     * @param esp espessura das Circulos
-     */
-    public static void desenharCirculos(Graphics g, int qtde, int esp){
-
-        for(int i=0; i < qtde; i++) {
-            int x1 = (int) (Math.random() * 801);
-            int y1 = (int) (Math.random() * 801);
-            int x2 = (int) (Math.random() * 801);
-            int y2 = (int) (Math.random() * 801);
-
-            // Cor (R, G e B) aleatorio
-            Color cor = new Color((int) (Math.random() * 256),  
-                    (int) (Math.random() * 256),  
-                    (int) (Math.random() * 256));
-            CirculoGr r = new CirculoGr(x1, y1, x2, y2, cor, "", esp);
-            //r.desenharCirculoEq(g);
-            //r.desenharCirculoTheta(g);
-            r.desenharCirculoSim(g);
+    public static void guardarCirculo(Graphics g, int x1, int y1, int x2, int y2, String nome, int esp, Color cor)
+    {
+        CirculoGr r = new CirculoGr(x1, y1, x2, y2, cor, nome, esp);
+        Circulos.add(r);
+    }
+    
+    public static void redefinirCirculos(Graphics g)
+    {
+        CirculoGr r;
+        for (int i = 0; i < Circulos.size(); i++) {
+            r = (CirculoGr)Circulos.get(i);
+            desenharCirculo(g, (int)r.getP1().getX(), (int)r.getP1().getY(), (int)r.getP2().getX(), (int)r.getP2().getY(), r.getNomeCirculo(), r.getEspCirculo(), r.getCorCirculo());
         }
     }
 }
