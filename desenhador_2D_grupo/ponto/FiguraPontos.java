@@ -43,6 +43,18 @@ public class FiguraPontos {
     {
         PontoGr r = new PontoGr(x1, y1, cor, nome, esp);
         Pontos.add(r);
-        System.out.println(Pontos.isEmpty());
+    }
+    
+    public static void redefinirPontos(Graphics g)
+    {
+        PontoGr r;
+        for (int i = 0; i < Pontos.size(); i++) {
+            r = (PontoGr)Pontos.get(i);
+            desenharPonto(g, (int)r.getX(), (int)r.getY(), r.getNomePto(), r.getDiametro(), r.getCorPto());
+        }
+    }
+    
+    public static void reinicializarPontos() {
+        Pontos.clear();
     }
 }

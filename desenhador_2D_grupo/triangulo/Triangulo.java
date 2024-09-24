@@ -63,58 +63,30 @@ public class Triangulo {
         setP2(r.getP2());
         setP2(r.getP3());
     }
-    
-    /**
-     * Altera valor de p1 de acordo com o parametro
-     *
-     * @param p valor de p1 (externo)
-     */
+
     public void setP1(Ponto p){
         this.p1 = p;
     }
-    
-    /**
-     * Altera valor de p2 de acordo com o parametro
-     *
-     * @param p valor de p2 (externo)
-     */
+
     public void setP2(Ponto p){
         this.p2 = p;
     }
-    
-    /**
-     * Altera valor de p2 de acordo com o parametro
-     *
-     * @param p valor de p2 (externo)
-     */
+
     public void setP3(Ponto p){
         this.p3 = p;
     }
-    
-    /**
-     * Retorna valor de p1
-     *
-     * @return valor de p1
-     */
+
     public Ponto getP1(){
         return this.p1;
     }
-    
-    /**
-     * Retorna p2
-     *
-     * @return valor de p2
-     */
+
     public Ponto getP2(){
         return this.p2;
     }
-    
-    /**
-     * Retorna p2
-     *
-     * @return valor de p2
-     */
+
     public Ponto getP3(){
         return this.p3;
     }
+    
+    
 }

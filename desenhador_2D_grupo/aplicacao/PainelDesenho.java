@@ -173,6 +173,8 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         }
         else if(tipo == TipoPrimitivo.CIRCULO) { // TRÊS clicks do mouse
             FiguraCirculos.guardarCirculo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
+        } else {
+            FiguraRetas.guardarTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getCorAtual());
         }
     } 
 
@@ -251,8 +253,16 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     
     public void redesenharPainel(Graphics g)
     {
+        FiguraPontos.redefinirPontos(g);
         FiguraRetas.redefinirRetas(g);
         FiguraRetas.redefinirRetangulos(g);
         FiguraCirculos.redefinirCirculos(g);
+        FiguraRetas.redefinirTriangulos(g);
+    }
+    
+    public void limparArrays() {
+        FiguraRetas.reinicializarRetas();
+        FiguraPontos.reinicializarPontos();
+        FiguraCirculos.reinicializarCirculos();
     }
 }

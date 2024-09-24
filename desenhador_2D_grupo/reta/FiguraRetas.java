@@ -77,6 +77,12 @@ public class FiguraRetas {
         Retangulos.add(r);
     }
     
+    public static void guardarTriangulo(Graphics g, int x1, int y1, int x2, int y2, int x3, int y3, String nome, int esp, Color cor)
+    {
+        TrianguloGr r = new TrianguloGr(x1, y1, x2, y2, x3, y3, cor, nome, esp);
+        Triangulos.add(r);
+    }
+    
     public static void redefinirRetas(Graphics g)
     {
         RetaGr r;
@@ -93,5 +99,21 @@ public class FiguraRetas {
             r = (RetanguloGr)Retangulos.get(i);
             desenharRetangulo(g, (int)r.getP1().getX(), (int)r.getP1().getY(), (int)r.getP2().getX(), (int)r.getP2().getY(), r.getNomeRetangulo(), r.getEspRetangulo(), r.getCorRetangulo());
         }
+    }
+    
+    public static void redefinirTriangulos(Graphics g)
+    {
+        TrianguloGr r;
+        for (int i = 0; i < Triangulos.size(); i++) {
+            r = (TrianguloGr)Triangulos.get(i);
+            desenharTriangulo(g, (int)r.getP1().getX(), (int)r.getP1().getY(), (int)r.getP2().getX(), (int)r.getP2().getY(), 
+            (int)r.getP3().getX(), (int)r.getP3().getY(), r.getNomeTriangulo(), r.getEspTriangulo(), r.getCorTriangulo());
+        }
+    }
+    
+    public static void reinicializarRetas() {
+        Retas.clear();
+        Retangulos.clear();
+        Triangulos.clear();
     }
 }

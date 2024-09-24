@@ -46,4 +46,8 @@ public class FiguraCirculos
             desenharCirculo(g, (int)r.getP1().getX(), (int)r.getP1().getY(), (int)r.getP2().getX(), (int)r.getP2().getY(), r.getNomeCirculo(), r.getEspCirculo(), r.getCorCirculo());
         }
     }
+    
+    public static void reinicializarCirculos() {
+        Circulos.clear();
+    }
 }
