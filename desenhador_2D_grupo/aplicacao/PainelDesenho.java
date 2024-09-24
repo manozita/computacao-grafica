@@ -26,8 +26,8 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     Color corAtual;             // Cor atual do primitivo
     int esp;                    // Espessura, diâmetro do ponto
 
-    int x, y;                   // Coordenadas para o PONTO
-    int x1, y1, x2, y2, x3, y3, xant=0, yant=0; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
+    Integer x, y;                   // Coordenadas para o PONTO
+    Integer x1, y1, x2, y2, x3, y3, xant, yant; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
     int clickCount = 0;         // Contador de cliques para o triângulo
     boolean primeiraVez = true; // Verifica se foi o primeiro click do mouse, para construção das figuras
 
@@ -110,12 +110,12 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             paint(g);       // Pega as coordenadas e pinta um ponto
         } else if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO || tipo == TipoPrimitivo.RETANGULO){ // DOIS clicks do mouse
             if (primeiraVez == true) { // Se for o primeiro click do mouse
-                x1 = (int)e.getX();
-                y1 = (int)e.getY();
+                x1 = e.getX();
+                y1 = e.getY();
                 primeiraVez = false; // Não é mais a primeira vez
             } else {
-                x2 = (int)e.getX();
-                y2 = (int)e.getY();
+                x2 = e.getX();
+                y2 = e.getY();
                 primeiraVez = true;  // Reinicia a variável para o próximo ponto
                 paint(g);   // Pega as coordenadas e faz a figura
             }
@@ -134,6 +134,8 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 y3 = e.getY();
                 clickCount = 0; // Reinicia o contador para o próximo triângulo
                 paint(g); // Pega as coordenadas e faz a figura
+                FiguraRetas.guardarTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getCorAtual());
+                x1 = y1 = x2 = y2 = x3 = y3 = null;
             }
         }
     }     
@@ -166,16 +168,14 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         Graphics g = getGraphics();
         if (tipo == TipoPrimitivo.PONTO) { // O ponto requer UM único click do mouse
             FiguraPontos.guardarPonto(g, x, y, "", getEsp(), getCorAtual());
-        } else if (tipo == TipoPrimitivo.RETA){ // DOIS clicks do mouse
+        } else if (tipo == TipoPrimitivo.RETA && x1 != null && x2 != null) { // DOIS clicks do mouse
             FiguraRetas.guardarReta(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
-        } else if(tipo == TipoPrimitivo.RETANGULO) { // TRÊS clicks do mouse
+        } else if(tipo == TipoPrimitivo.RETANGULO && x1 != null && x2 != null) { // TRÊS clicks do mouse
             FiguraRetas.guardarRetangulo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
-        }
-        else if(tipo == TipoPrimitivo.CIRCULO) { // TRÊS clicks do mouse
+        } else if(tipo == TipoPrimitivo.CIRCULO && x1 != null && x2 != null) { // TRÊS clicks do mouse
             FiguraCirculos.guardarCirculo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
-        } else {
-            FiguraRetas.guardarTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getCorAtual());
         }
+        redesenharPainel(g);
     } 
 
     /**
@@ -212,21 +212,21 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param g biblioteca para desenhar em modo grafico
      */
     public void desenharPrimitivos(Graphics g){
-        if (tipo == TipoPrimitivo.PONTO) {          // Desenha o ponto
+        if (tipo == TipoPrimitivo.PONTO && x != null) {          // Desenha o ponto
             FiguraPontos.desenharPonto(g, x, y, "", getEsp(), getCorAtual());
             //FiguraPontos.desenharPontos(g, 50, 20);
         }
-        else if (tipo == TipoPrimitivo.RETA) {      // Desenha a reta
+        else if (tipo == TipoPrimitivo.RETA && x1 != null && x2 != null) {      // Desenha a reta
             FiguraRetas.desenharReta(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
             //FiguraRetas.desenharRetas(g, 10, 3);
         }
-        else if (tipo==TipoPrimitivo.CIRCULO) {     // Desenha o círculo
+        else if (tipo==TipoPrimitivo.CIRCULO && x1 != null && x2 != null) {     // Desenha o círculo
             FiguraCirculos.desenharCirculo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
         }
-        else if (tipo==TipoPrimitivo.RETANGULO) {   // Desenha o retângulo
+        else if (tipo==TipoPrimitivo.RETANGULO && x1 != null && x2 != null) {   // Desenha o retângulo
             FiguraRetas.desenharRetangulo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
         }
-        else if (tipo==TipoPrimitivo.TRIANGULO) {   // Desenha o triângulo
+        else if (tipo==TipoPrimitivo.TRIANGULO && x1 != null && x2 != null && x3 != null) {   // Desenha o triângulo
             FiguraRetas.desenharTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getCorAtual());
         }
     }
@@ -237,18 +237,18 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param g biblioteca para desenhar em modo grafico
      */
     public void apagarPrimitivos(Graphics g){
-        if (tipo == TipoPrimitivo.RETA) {           // Apaga a reta
+        if (tipo == TipoPrimitivo.RETA && x1 != null && xant != null) {           // Apaga a reta
             FiguraRetas.desenharReta(g, x1, y1, xant, yant, "", getEsp(), getBackground());
         }
-        else if (tipo==TipoPrimitivo.CIRCULO) {     // Desenha o círculo
+        else if (tipo==TipoPrimitivo.CIRCULO && x1 != null && xant != null) {     // Desenha o círculo
             FiguraCirculos.desenharCirculo(g, x1, y1, xant, yant, "", getEsp(), getBackground());
         }
-        else if (tipo==TipoPrimitivo.RETANGULO) {   // Desenha o retângulo
+        else if (tipo==TipoPrimitivo.RETANGULO && x1 != null && xant != null) {   // Desenha o retângulo
             FiguraRetas.desenharRetangulo(g, x1, y1, xant, yant, "", getEsp(), getBackground());
         }
-        else if (tipo==TipoPrimitivo.TRIANGULO) {   // Desenha o triângulo
+        //else if (tipo==TipoPrimitivo.TRIANGULO && x1 != null && x2 != null && x3 != null) {   // Desenha o triângulo
             //FiguraRetas.desenharTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getBackground());
-        }
+        //}
     }
     
     public void redesenharPainel(Graphics g)
