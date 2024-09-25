@@ -98,7 +98,7 @@ class Gui extends JFrame {
             areaDesenho.removeAll();
             jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivo da tela) 
             repaint();
-            areaDesenho.limparArrays();
+            areaDesenho.limparPainel();
         });
         jbCor.addActionListener(e -> {       // Botão de escolha de cor
             Color novaCor = JColorChooser.showDialog(null, "Escolha uma cor", msg.getForeground()); 
