@@ -34,4 +34,9 @@ public class Array
     {
         return lista.get(i);
     }
+    
+    public void apagarElemento(int i)
+    {
+        lista.remove(i);
+    }
 }

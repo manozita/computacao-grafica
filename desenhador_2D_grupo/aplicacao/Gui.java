@@ -32,6 +32,7 @@ class Gui extends JFrame {
     private JButton jbCirculo = new JButton("Círculo");
     private JButton jbRetangulo = new JButton("Retângulo");
     private JButton jbTriangulo = new JButton("Triângulo");
+    private JButton jbDeletar = new JButton("Deletar");
     private JButton jbLimpar = new JButton("Limpar");
     private JButton jbCor = new JButton("Cor");
     private JButton jbSair = new JButton("Sair");
@@ -60,6 +61,7 @@ class Gui extends JFrame {
         barraComandos.add(jbCirculo);
         barraComandos.add(jbRetangulo);
         barraComandos.add(jbTriangulo);
+        barraComandos.add(jbDeletar);
         barraComandos.add(jbLimpar);    // Botão de Limpar
         barraComandos.add(jbCor);       // Botão de Cores
 
@@ -93,7 +95,11 @@ class Gui extends JFrame {
         jbTriangulo.addActionListener(e -> { // Botão de triângulo
             tipoAtual = TipoPrimitivo.TRIANGULO;
             areaDesenho.setTipo(tipoAtual);
-        }); 
+        });
+        jbDeletar.addActionListener(e -> { // Botão de triângulo
+            tipoAtual = TipoPrimitivo.DELETAR;
+            areaDesenho.setTipo(tipoAtual);
+        });
         jbLimpar.addActionListener(e -> {    // Botão de limpar
             areaDesenho.removeAll();
             jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivo da tela) 

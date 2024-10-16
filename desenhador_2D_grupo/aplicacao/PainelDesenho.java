@@ -9,6 +9,8 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import java.lang.Math;
+
 import ponto.FiguraPontos;
 import reta.FiguraRetas;
 import circulo.FiguraCirculos;
@@ -105,10 +107,14 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      */
     public void mousePressed(MouseEvent e) { 
         Graphics g = getGraphics();
-        if (tipo == TipoPrimitivo.PONTO) { // O ponto requer UM único click do mouse
+        if (tipo == TipoPrimitivo.PONTO) { // O ponto e o delete requerem UM único click do mouse
             x1 = e.getX();
             y1 = e.getY();
             paint(g);       // Pega as coordenadas e pinta um ponto
+        } else if(tipo == TipoPrimitivo.DELETAR) {
+            x1 = e.getX();
+            y1 = e.getY();
+            deletarPrimitivo(x1, y1);
         } else if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO || tipo == TipoPrimitivo.RETANGULO){ // DOIS clicks do mouse
             if (primeiraVez == true) { // Se for o primeiro click do mouse
                 x1 = e.getX();
@@ -178,7 +184,6 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         {
             formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
         }
-
         redesenharPainel(g);
     } 
 
@@ -189,6 +194,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      */
     public void mouseDragged(MouseEvent e) {
         Graphics g = getGraphics();
+        redesenharPainel(g);
         if (tipo != TipoPrimitivo.TRIANGULO) {
             //Graphics g = getGraphics();
             xant = x2;
@@ -198,7 +204,6 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             this.msg.setText("("+e.getX() + ", " + e.getY() + ") - " + getTipo());
             paint(g);
         }
-        redesenharPainel(g);
     }
 
     /**
@@ -277,9 +282,130 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             }
         }
     }
-    
+
     public void limparPainel()
     {
         formas.limparArray();
+    }
+
+    public void deletarPrimitivo(Integer x, Integer y)  // Deleta uma figura selecionada pelo usuario
+    {
+        boolean apagou = false; // Verificador de remocao
+        int i = formas.getTamanho()-1;  // Indice do ultimo elemento
+        TipoPrimitivo t;
+
+        while(i >= 0 && apagou == false)    // Na duvida remove o mais recente
+        {
+            t = formas.getFigura(i).getTipo();  // Faremos a comparação até achar um elemento mais próximo
+            if(t == TipoPrimitivo.PONTO)
+            {
+                if(deletarPonto(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1()))    // Verifica se da pra apagar
+                {
+                    formas.apagarElemento(i);
+                    apagou = true;
+                }
+            }
+            else if(t == TipoPrimitivo.RETA)
+            {
+                if(deletarReta(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2()))
+                {
+                    formas.apagarElemento(i);
+                    apagou = true;
+                }
+            }
+            else if(t == TipoPrimitivo.RETANGULO)
+            {
+                if(deletarRetangulo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2()))
+                {
+                    formas.apagarElemento(i);
+                    apagou = true;
+                }
+            }
+            else if(t == TipoPrimitivo.CIRCULO)
+            {
+                if(deletarCirculo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2()))
+                {
+                    formas.apagarElemento(i);
+                    apagou = true;
+                }
+            }
+            else if(t == TipoPrimitivo.TRIANGULO)
+            {
+                if(deletarTriangulo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3()))
+                {
+                    formas.apagarElemento(i);
+                    apagou = true;
+                }
+            }
+            i--;
+        }
+
+        // Se um elemento foi apagado, redesenhe o painel
+        if (apagou) {
+            repaint();  // Atualiza o painel removendo o elemento deletado
+        }
+    }
+
+    public boolean deletarPonto(Integer x, Integer y, Integer xP, Integer yP)
+    {
+        double d;
+        d = Math.sqrt((xP-x)*(xP-x)+(yP-y)*(yP-y));
+        if(d <= 4)
+        {
+            return true;
+        }
+        return false;
+    } 
+
+    public boolean deletarReta(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R)
+    {
+        // Fórmula da distância ponto para reta
+        double numerador = Math.abs((y2R - y1R) * x - (x2R - x1R) * y + x2R * y1R - y2R * x1R);
+        double denominador = Math.sqrt(Math.pow(y2R - y1R, 2) + Math.pow(x2R - x1R, 2));
+        double distancia = numerador / denominador;
+
+        if (distancia <= 4) { // Tolerância de 4 pixels
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deletarRetangulo(Integer x, Integer y, Integer xMin, Integer yMin, Integer xMax, Integer yMax) {
+        // Expansão com tolerância (4 pixels)
+        int tolerancia = 4;
+
+        if (x >= xMin - tolerancia && x <= xMax + tolerancia &&
+        y >= yMin - tolerancia && y <= yMax + tolerancia) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deletarCirculo(Integer x, Integer y, Integer xC, Integer yC, Integer xB, Integer yB) {
+        // Cálculo do raio com base na distância entre o centro (xC, yC) e o ponto na borda (xB, yB)
+        double raio = Math.sqrt((xB - xC) * (xB - xC) + (yB - yC) * (yB - yC));
+
+        // Cálculo da distância do ponto clicado (x, y) ao centro do círculo (xC, yC)
+        double distancia = Math.sqrt((xC - x) * (xC - x) + (yC - y) * (yC - y));
+
+        // Verifica se a distância do clique é aproximadamente igual ao raio
+        if (Math.abs(distancia - raio) <= 4) { // Tolerância de 4 pixels
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deletarTriangulo(Integer x, Integer y, Integer x1T, Integer y1T, Integer x2T, Integer y2T, Integer x3T, Integer y3T) {
+        // Função para calcular a área de um triângulo dado três pontos
+        double areaOriginal = Math.abs(x1T * (y2T - y3T) + x2T * (y3T - y1T) + x3T * (y1T - y2T)) / 2.0;
+        double area1 = Math.abs(x * (y2T - y3T) + x2T * (y3T - y) + x3T * (y - y2T)) / 2.0;
+        double area2 = Math.abs(x1T * (y - y3T) + x * (y3T - y1T) + x3T * (y1T - y)) / 2.0;
+        double area3 = Math.abs(x1T * (y2T - y) + x2T * (y - y1T) + x * (y1T - y2T)) / 2.0;
+
+        // Verifica se a soma das áreas é aproximadamente igual à área original
+        if (Math.abs(areaOriginal - (area1 + area2 + area3)) <= 0.01) {
+            return true;
+        }
+        return false;
     }
 }
