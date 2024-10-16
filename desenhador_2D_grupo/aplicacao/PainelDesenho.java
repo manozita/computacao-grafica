@@ -368,14 +368,16 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
 
     public boolean deletarRetangulo(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, int i) {
         // Definindo as quatro arestas do retângulo
-        boolean proximoAresta1 = distanciaParaAresta(x1R, y1R, x2R, y1R, x, y) <= tolerancia; // Aresta superior
-        boolean proximoAresta2 = distanciaParaAresta(x2R, y1R, x2R, y2R, x, y) <= tolerancia; // Aresta direita
-        boolean proximoAresta3 = distanciaParaAresta(x2R, y2R, x1R, y2R, x, y) <= tolerancia; // Aresta inferior
-        boolean proximoAresta4 = distanciaParaAresta(x1R, y2R, x1R, y1R, x, y) <= tolerancia; // Aresta esquerda
+        boolean proximoAresta1 = distanciaParaAresta(x, y, x1R, y1R, x2R, y1R) <= tolerancia; // Aresta superior
+        boolean proximoAresta2 = distanciaParaAresta(x, y, x2R, y1R, x2R, y2R) <= tolerancia; // Aresta direita
+        boolean proximoAresta3 = distanciaParaAresta(x, y, x2R, y2R, x1R, y2R) <= tolerancia; // Aresta inferior
+        boolean proximoAresta4 = distanciaParaAresta(x, y, x1R, y2R, x1R, y1R) <= tolerancia; // Aresta esquerda
+        System.out.println("");
 
         // Se o ponto estiver próximo de alguma das arestas, apagamos o retângulo
         if (proximoAresta1 || proximoAresta2 || proximoAresta3 || proximoAresta4) {
             Graphics g = getGraphics();
+            System.out.println(i);
             FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", formas.getFigura(i).getEsp(), getBackground());
             formas.apagarElemento(i);
             return true;
@@ -402,9 +404,9 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     }
 
     public boolean deletarTriangulo(Integer x, Integer y, Integer x1T, Integer y1T, Integer x2T, Integer y2T, Integer x3T, Integer y3T, int i) {
-        boolean proximoAresta1 = distanciaParaAresta(x1T, y1T, x2T, y2T, x, y) <= tolerancia;
-        boolean proximoAresta2 = distanciaParaAresta(x2T, y2T, x3T, y3T, x, y) <= tolerancia;
-        boolean proximoAresta3 = distanciaParaAresta(x3T, y3T, x1T, y1T, x, y) <= tolerancia;
+        boolean proximoAresta1 = distanciaParaAresta(x, y, x1T, y1T, x2T, y2T) <= tolerancia;
+        boolean proximoAresta2 = distanciaParaAresta(x, y, x2T, y2T, x3T, y3T) <= tolerancia;
+        boolean proximoAresta3 = distanciaParaAresta(x, y, x3T, y3T, x1T, y1T) <= tolerancia;
 
         // Se o ponto estiver próximo a uma das arestas, apagamos o triângulo
         if (proximoAresta1 || proximoAresta2 || proximoAresta3)
@@ -419,7 +421,15 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
 
     private double distanciaParaAresta(Integer x, Integer y, Integer xA, Integer yA, Integer xB, Integer yB)
     {
-        return Math.abs((yB - yA) * x - (xB - xA) * y + xB * yA - yB * xA) / 
-        Math.sqrt(Math.pow(yB - yA, 2) + Math.pow(xB - xA, 2));
+        double d;
+        if(xA.equals(xB) && yA.equals(yB))
+        {
+            d = Math.sqrt(Math.pow((xA-x), 2)+ Math.pow((yA-y), 2));
+            System.out.println(d);
+            return d;
+        }
+        d = Math.abs((yB - yA) * x - (xB - xA) * y + xB * yA - yB * xA) / Math.sqrt(Math.pow(yB - yA, 2) + Math.pow(xB - xA, 2));
+        //System.out.println(d);
+        return d;
     }
 }
