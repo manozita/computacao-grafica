@@ -53,7 +53,7 @@ class Gui extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(larg, alt);
         setVisible(true);
-        //setResizable(false);
+        setResizable(false);
 
         // COMPONENETES
         barraComandos.add(jbPonto);

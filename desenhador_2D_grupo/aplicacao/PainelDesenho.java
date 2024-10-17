@@ -165,7 +165,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param e dados do evento do mouse
      */
     public void mouseReleased(MouseEvent e) { 
-        if (tipo != TipoPrimitivo.TRIANGULO) {
+        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.DELETAR) {
             Graphics g = getGraphics();
             x2 = (int)e.getX();
             y2 = (int)e.getY();
@@ -182,7 +182,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
             }
         }
-        else
+        else if(tipo != TipoPrimitivo.DELETAR)
         {
             formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
         }
@@ -197,7 +197,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void mouseDragged(MouseEvent e) {
         Graphics g = getGraphics();
         redesenharPainel(g);
-        if (tipo != TipoPrimitivo.TRIANGULO) {
+        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.DELETAR) {
             //Graphics g = getGraphics();
             xant = x2;
             yant = y2;
@@ -296,7 +296,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         int i = formas.getTamanho()-1;  // Indice do ultimo elemento
         TipoPrimitivo t;
 
-        while(i >= 0 && apagou == false)    // Na duvida remove o mais recente
+        while(i >= 0 && !apagou)    // Na duvida remove o mais recente
         {
             t = formas.getFigura(i).getTipo();  // Faremos a comparação até achar um elemento mais próximo
             if(t == TipoPrimitivo.PONTO)
@@ -317,7 +317,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             {
                 if(deletarRetangulo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), i))
                 {
-                    apagou = true;
+                    apagou = true;                
                 }
             }
             else if(t == TipoPrimitivo.CIRCULO)
@@ -372,12 +372,10 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         boolean proximoAresta2 = distanciaParaAresta(x, y, x2R, y1R, x2R, y2R) <= tolerancia; // Aresta direita
         boolean proximoAresta3 = distanciaParaAresta(x, y, x2R, y2R, x1R, y2R) <= tolerancia; // Aresta inferior
         boolean proximoAresta4 = distanciaParaAresta(x, y, x1R, y2R, x1R, y1R) <= tolerancia; // Aresta esquerda
-        System.out.println("");
 
         // Se o ponto estiver próximo de alguma das arestas, apagamos o retângulo
         if (proximoAresta1 || proximoAresta2 || proximoAresta3 || proximoAresta4) {
             Graphics g = getGraphics();
-            System.out.println(i);
             FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", formas.getFigura(i).getEsp(), getBackground());
             formas.apagarElemento(i);
             return true;
@@ -419,17 +417,42 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         return false;
     }
 
-    private double distanciaParaAresta(Integer x, Integer y, Integer xA, Integer yA, Integer xB, Integer yB)
-    {
-        double d;
-        if(xA.equals(xB) && yA.equals(yB))
-        {
-            d = Math.sqrt(Math.pow((xA-x), 2)+ Math.pow((yA-y), 2));
-            System.out.println(d);
-            return d;
+    private double distanciaParaAresta(Integer x, Integer y, Integer xA, Integer yA, Integer xB, Integer yB) {
+        // Vetores (ponto A para o ponto B) e (ponto A para o ponto P)
+        double ABx = xB - xA;
+        double ABy = yB - yA;
+        double APx = x - xA;
+        double APy = y - yA;
+
+        // Produto escalar de AB e AP
+        double produtoEscalar = APx * ABx + APy * ABy;
+
+        // Comprimento ao quadrado de AB
+        double comprimentoAB2 = ABx * ABx + ABy * ABy;
+
+        // Se o segmento é na verdade um ponto
+        if (comprimentoAB2 == 0) {
+            return Math.sqrt(Math.pow(x - xA, 2) + Math.pow(y - yA, 2));
         }
-        d = Math.abs((yB - yA) * x - (xB - xA) * y + xB * yA - yB * xA) / Math.sqrt(Math.pow(yB - yA, 2) + Math.pow(xB - xA, 2));
-        //System.out.println(d);
-        return d;
+
+        // Projeção escalar do ponto no segmento normalizado entre 0 e 1
+        double t = produtoEscalar / comprimentoAB2;
+
+        // Verifica se a projeção está dentro do segmento
+        if (t < 0) {
+            // Mais perto do ponto A
+            return Math.sqrt(Math.pow(x - xA, 2) + Math.pow(y - yA, 2));
+        } else if (t > 1) {
+            // Mais perto do ponto B
+            return Math.sqrt(Math.pow(x - xB, 2) + Math.pow(y - yB, 2));
+        }
+
+        // Projeção está dentro do segmento, calcular ponto projetado
+        double Px = xA + t * ABx;
+        double Py = yA + t * ABy;
+
+        // Distância do ponto (x, y) para o ponto projetado (Px, Py)
+        return Math.sqrt(Math.pow(x - Px, 2) + Math.pow(y - Py, 2));
     }
+
 }
