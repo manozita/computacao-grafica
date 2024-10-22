@@ -243,7 +243,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     }
 
     /**
-     * Apaga os primitivos anteriores
+     * Apaga os primitivos anteriores durante o desenho de Retas, Circulos e Retangulos
      *
      * @param g biblioteca para desenhar em modo grafico
      */
@@ -259,7 +259,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         }
     }
 
-    public void redesenharPainel(Graphics g)
+    public void redesenharPainel(Graphics g)    // Redesenha as figuras já presentes
     {
         for (int i = 0; i < formas.getTamanho(); i++) {
             if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
@@ -285,8 +285,37 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         }
     }
 
-    public void limparPainel()
+    public void limparPainel(Graphics g)    // Redesenha todas as figuras com a cor do fundo "apagando-as" da tela
     {
+        for (int i = 0; i < formas.getTamanho(); i++)
+        {
+            if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
+            {
+                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), getBackground());
+            }
+            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
+            {
+                FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
+            }
+            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETANGULO)
+            {
+                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
+            }
+            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.CIRCULO)
+            {
+                FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
+            }
+            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.TRIANGULO)
+            {
+                FiguraRetas.desenharTriangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), "", formas.getFigura(i).getEsp(), getBackground());
+            }
+        }
+    }
+
+    public void restaurarPainel()   // Limpa a area de desenho mas mantem a espessura e cores atuais
+    {
+        Graphics g = getGraphics();
+        limparPainel(g);
         formas.limparArray();
     }
 

@@ -43,11 +43,11 @@ public class Gui extends JFrame {
     private JSlider jsEsp = new JSlider(1, 50, 1);
 
     /**
-    * Constroi a GUI
-    *
-    * @param larg largura da janela
-    * @param alt altura da janela
-    */
+     * Constroi a GUI
+     *
+     * @param larg largura da janela
+     * @param alt altura da janela
+     */
     public Gui(int larg, int alt) {
         // DEFINIÇÕES DA JANELA
         super("TESTE DE PRIMITIVOS");
@@ -78,50 +78,50 @@ public class Gui extends JFrame {
 
         // TRATAMENTO DE EVENTOS PARA CADA COMPONENTE
         jbPonto.addActionListener(e -> {     // Botão de ponto
-            tipoAtual = TipoPrimitivo.PONTO;
-            areaDesenho.setTipo(tipoAtual);
-        });        
+                    tipoAtual = TipoPrimitivo.PONTO;
+                    areaDesenho.setTipo(tipoAtual);
+            });        
         jbReta.addActionListener(e -> {      // Botão de reta
-            tipoAtual = TipoPrimitivo.RETA;
-            areaDesenho.setTipo(tipoAtual);
-        });        
+                    tipoAtual = TipoPrimitivo.RETA;
+                    areaDesenho.setTipo(tipoAtual);
+            });        
         jbCirculo.addActionListener(e -> {   // Botão de círculo
-            tipoAtual = TipoPrimitivo.CIRCULO;
-            areaDesenho.setTipo(tipoAtual);
-        });        
+                    tipoAtual = TipoPrimitivo.CIRCULO;
+                    areaDesenho.setTipo(tipoAtual);
+            });        
         jbRetangulo.addActionListener(e -> { // Botão de retângulo
-            tipoAtual = TipoPrimitivo.RETANGULO;
-            areaDesenho.setTipo(tipoAtual);
-        }); 
+                    tipoAtual = TipoPrimitivo.RETANGULO;
+                    areaDesenho.setTipo(tipoAtual);
+            }); 
         jbTriangulo.addActionListener(e -> { // Botão de triângulo
-            tipoAtual = TipoPrimitivo.TRIANGULO;
-            areaDesenho.setTipo(tipoAtual);
-        });
+                    tipoAtual = TipoPrimitivo.TRIANGULO;
+                    areaDesenho.setTipo(tipoAtual);
+            });
         jbSelecionar.addActionListener(e -> { // Botão de seleção
-            tipoAtual = TipoPrimitivo.SELECIONAR;
-            areaDesenho.setTipo(tipoAtual);
-        });
+                    tipoAtual = TipoPrimitivo.SELECIONAR;
+                    areaDesenho.setTipo(tipoAtual);
+            });
         jbLimpar.addActionListener(e -> {    // Botão de limpar
-            areaDesenho.removeAll();
-            jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivo da tela)
-            repaint();
-            areaDesenho.limparPainel();
-        });
+                    //jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivo da tela) 
+                    //repaint();
+                    areaDesenho.restaurarPainel();
+            });
         jbCor.addActionListener(e -> {       // Botão de escolha de cor
-            Color novaCor = JColorChooser.showDialog(null, "Escolha uma cor", msg.getForeground()); 
-            if (novaCor != null){ 
-                corAtual = novaCor; // Pega do chooserColor 
-            }
-            areaDesenho.setCorAtual(corAtual); // cor atual
-        });  
+                    Color novaCor = JColorChooser.showDialog(null, "Escolha uma cor", msg.getForeground()); 
+                    if (novaCor != null){ 
+                        corAtual = novaCor; // Pega do chooserColor 
+                    }
+                    areaDesenho.setCorAtual(corAtual); // cor atual
+            });  
         jsEsp.addChangeListener(e -> {      // Slider de espessura
-            espAtual = jsEsp.getValue();
-            jlEsp.setText("   Espessura: " + String.format("%-5s", espAtual));
-            areaDesenho.setEsp(espAtual);        
-        });
+                    espAtual = jsEsp.getValue();
+                    jlEsp.setText("   Espessura: " + String.format("%-5s", espAtual));
+                    areaDesenho.setEsp(espAtual);        
+            });
 
         jbSair.addActionListener(e -> {     // Botão de sair
-            System.exit(0);
-        });        
+                    System.exit(0);
+            });        
+
     }
 }
