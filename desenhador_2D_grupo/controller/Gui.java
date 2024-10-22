@@ -1,4 +1,5 @@
-package aplicacao;
+package controller;
+import aplicacao.*;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -17,7 +18,7 @@ import javax.swing.JToolBar;
  * @author Julio Arakaki 
  * @version 20220815
  */
-class Gui extends JFrame {
+public class Gui extends JFrame {
     private TipoPrimitivo tipoAtual = TipoPrimitivo.NENHUM; // Tipo atual de primitivo como nenhum
     private Color corAtual = Color.BLACK;                   // Cor atual como preto
     private int espAtual = 1;                               // Espessura atual do primitivo como 1
@@ -32,7 +33,7 @@ class Gui extends JFrame {
     private JButton jbCirculo = new JButton("Círculo");
     private JButton jbRetangulo = new JButton("Retângulo");
     private JButton jbTriangulo = new JButton("Triângulo");
-    private JButton jbDeletar = new JButton("Deletar");
+    private JButton jbSelecionar = new JButton("Selecionar");
     private JButton jbLimpar = new JButton("Limpar");
     private JButton jbCor = new JButton("Cor");
     private JButton jbSair = new JButton("Sair");
@@ -61,7 +62,7 @@ class Gui extends JFrame {
         barraComandos.add(jbCirculo);
         barraComandos.add(jbRetangulo);
         barraComandos.add(jbTriangulo);
-        barraComandos.add(jbDeletar);
+        barraComandos.add(jbSelecionar);
         barraComandos.add(jbLimpar);    // Botão de Limpar
         barraComandos.add(jbCor);       // Botão de Cores
 
@@ -96,13 +97,13 @@ class Gui extends JFrame {
             tipoAtual = TipoPrimitivo.TRIANGULO;
             areaDesenho.setTipo(tipoAtual);
         });
-        jbDeletar.addActionListener(e -> { // Botão de triângulo
-            tipoAtual = TipoPrimitivo.DELETAR;
+        jbSelecionar.addActionListener(e -> { // Botão de seleção
+            tipoAtual = TipoPrimitivo.SELECIONAR;
             areaDesenho.setTipo(tipoAtual);
         });
         jbLimpar.addActionListener(e -> {    // Botão de limpar
             areaDesenho.removeAll();
-            jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivo da tela) 
+            jsEsp.setValue(1); // Inicia slider (necessario para limpar ultimo primitivo da tela)
             repaint();
             areaDesenho.limparPainel();
         });

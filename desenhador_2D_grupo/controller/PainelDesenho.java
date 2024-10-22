@@ -1,4 +1,4 @@
-package aplicacao;
+package controller;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -30,10 +30,9 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     int esp;                    // Espessura, diâmetro do ponto
 
     Integer x1, y1, x2, y2, x3, y3, xant, yant; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
-    int tolerancia;  // Erro do clique para deletar uma figura
     int clickCount = 0;         // Contador de cliques para o triângulo
     boolean primeiraVez = true; // Verifica se foi o primeiro click do mouse, para construção das figuras
-    Array formas = new Array();
+    public Array formas = new Array();
 
     /**
      * Constroi o painel de desenho
@@ -48,7 +47,6 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         setMsg(msg);
         setCorAtual(corAtual);
         setEsp(esp);
-        tolerancia = getEsp()/2 + 4;
 
         // Adiciona "ouvidor" de eventos de mouse
         this.addMouseListener(this); 
@@ -113,10 +111,12 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             x1 = e.getX();
             y1 = e.getY();
             paint(g);       // Pega as coordenadas e pinta um ponto
-        } else if(tipo == TipoPrimitivo.DELETAR) {
+        } else if(tipo == TipoPrimitivo.SELECIONAR) {
             x1 = e.getX();
             y1 = e.getY();
-            deletarPrimitivo(x1, y1);
+            // IDEIA: na hora de selecionar, destacar a figura de alguma forma
+            Select selecao = new Select(this);
+            //deletarPrimitivo(x1, y1);
         } else if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO || tipo == TipoPrimitivo.RETANGULO){ // DOIS clicks do mouse
             if (primeiraVez == true) { // Se for o primeiro click do mouse
                 x1 = e.getX();
@@ -165,7 +165,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param e dados do evento do mouse
      */
     public void mouseReleased(MouseEvent e) { 
-        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.DELETAR) {
+        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.SELECIONAR) {
             Graphics g = getGraphics();
             x2 = (int)e.getX();
             y2 = (int)e.getY();
@@ -182,7 +182,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
             }
         }
-        else if(tipo != TipoPrimitivo.DELETAR)
+        else if(tipo != TipoPrimitivo.SELECIONAR)
         {
             formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
         }
@@ -197,7 +197,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void mouseDragged(MouseEvent e) {
         Graphics g = getGraphics();
         redesenharPainel(g);
-        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.DELETAR) {
+        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.SELECIONAR) {
             //Graphics g = getGraphics();
             xant = x2;
             yant = y2;
@@ -288,171 +288,6 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void limparPainel()
     {
         formas.limparArray();
-    }
-
-    public void deletarPrimitivo(Integer x, Integer y)  // Deleta uma figura selecionada pelo usuario
-    {
-        boolean apagou = false; // Verificador de remocao
-        int i = formas.getTamanho()-1;  // Indice do ultimo elemento
-        TipoPrimitivo t;
-
-        while(i >= 0 && !apagou)    // Na duvida remove o mais recente
-        {
-            t = formas.getFigura(i).getTipo();  // Faremos a comparação até achar um elemento mais próximo
-            if(t == TipoPrimitivo.PONTO)
-            {
-                if(deletarPonto(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), i))    // Verifica se da pra apagar
-                {
-                    apagou = true;
-                }
-            }
-            else if(t == TipoPrimitivo.RETA)
-            {
-                if(deletarReta(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), i))
-                {
-                    apagou = true;
-                }
-            }
-            else if(t == TipoPrimitivo.RETANGULO)
-            {
-                if(deletarRetangulo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), i))
-                {
-                    apagou = true;                
-                }
-            }
-            else if(t == TipoPrimitivo.CIRCULO)
-            {
-                if(deletarCirculo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), i))
-                {
-                    apagou = true;
-                }
-            }
-            else if(t == TipoPrimitivo.TRIANGULO)
-            {
-                if(deletarTriangulo(x, y, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), i))
-                {
-                    apagou = true;
-                }
-            }
-            i--;
-        }        
-    }
-
-    public boolean deletarPonto(Integer x, Integer y, Integer xP, Integer yP, int i)
-    {
-        double d;
-        d = Math.sqrt((xP-x)*(xP-x)+(yP-y)*(yP-y));
-        if(d <= tolerancia)
-        {
-            Graphics g = getGraphics();
-            FiguraPontos.desenharPonto(g, xP, yP, "", formas.getFigura(i).getEsp(), getBackground());
-            formas.apagarElemento(i);
-            return true;
-        }
-        return false;
-    } 
-
-    public boolean deletarReta(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, int i)
-    {
-        // Fórmula da distância ponto para reta
-        double distancia = distanciaParaAresta(x, y, x1R, y1R, x2R, y2R);
-
-        if (distancia <= tolerancia) { // Tolerância de 4 pixels
-            Graphics g = getGraphics();
-            FiguraRetas.desenharReta(g, x1R, y1R, x2R, y2R, "", formas.getFigura(i).getEsp(), getBackground());
-            formas.apagarElemento(i);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean deletarRetangulo(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, int i) {
-        // Definindo as quatro arestas do retângulo
-        boolean proximoAresta1 = distanciaParaAresta(x, y, x1R, y1R, x2R, y1R) <= tolerancia; // Aresta superior
-        boolean proximoAresta2 = distanciaParaAresta(x, y, x2R, y1R, x2R, y2R) <= tolerancia; // Aresta direita
-        boolean proximoAresta3 = distanciaParaAresta(x, y, x2R, y2R, x1R, y2R) <= tolerancia; // Aresta inferior
-        boolean proximoAresta4 = distanciaParaAresta(x, y, x1R, y2R, x1R, y1R) <= tolerancia; // Aresta esquerda
-
-        // Se o ponto estiver próximo de alguma das arestas, apagamos o retângulo
-        if (proximoAresta1 || proximoAresta2 || proximoAresta3 || proximoAresta4) {
-            Graphics g = getGraphics();
-            FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", formas.getFigura(i).getEsp(), getBackground());
-            formas.apagarElemento(i);
-            return true;
-        }
-
-        return false;
-    }
-
-    public boolean deletarCirculo(Integer x, Integer y, Integer xC, Integer yC, Integer xB, Integer yB, int i) {
-        // Cálculo do raio com base na distância entre o centro (xC, yC) e o ponto na borda (xB, yB)
-        double raio = Math.sqrt((xB - xC) * (xB - xC) + (yB - yC) * (yB - yC));
-
-        // Cálculo da distância do ponto clicado (x, y) ao centro do círculo (xC, yC)
-        double distancia = Math.sqrt((xC - x) * (xC - x) + (yC - y) * (yC - y));
-
-        // Verifica se a distância do clique é aproximadamente igual ao raio
-        if (Math.abs(distancia - raio) <= 4) { // Tolerância de 4 pixels
-            Graphics g = getGraphics();
-            FiguraCirculos.desenharCirculo(g, xC, yC, xB, yB, "", formas.getFigura(i).getEsp(), getBackground());
-            formas.apagarElemento(i);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean deletarTriangulo(Integer x, Integer y, Integer x1T, Integer y1T, Integer x2T, Integer y2T, Integer x3T, Integer y3T, int i) {
-        boolean proximoAresta1 = distanciaParaAresta(x, y, x1T, y1T, x2T, y2T) <= tolerancia;
-        boolean proximoAresta2 = distanciaParaAresta(x, y, x2T, y2T, x3T, y3T) <= tolerancia;
-        boolean proximoAresta3 = distanciaParaAresta(x, y, x3T, y3T, x1T, y1T) <= tolerancia;
-
-        // Se o ponto estiver próximo a uma das arestas, apagamos o triângulo
-        if (proximoAresta1 || proximoAresta2 || proximoAresta3)
-        {
-            Graphics g = getGraphics();
-            FiguraRetas.desenharTriangulo(g, x1T, y1T, x2T, y2T, x3T, y3T, "", formas.getFigura(i).getEsp(), getBackground());
-            formas.apagarElemento(i);
-            return true;
-        }
-        return false;
-    }
-
-    private double distanciaParaAresta(Integer x, Integer y, Integer xA, Integer yA, Integer xB, Integer yB) {
-        // Vetores (ponto A para o ponto B) e (ponto A para o ponto P)
-        double ABx = xB - xA;
-        double ABy = yB - yA;
-        double APx = x - xA;
-        double APy = y - yA;
-
-        // Produto escalar de AB e AP
-        double produtoEscalar = APx * ABx + APy * ABy;
-
-        // Comprimento ao quadrado de AB
-        double comprimentoAB2 = ABx * ABx + ABy * ABy;
-
-        // Se o segmento é na verdade um ponto
-        if (comprimentoAB2 == 0) {
-            return Math.sqrt(Math.pow(x - xA, 2) + Math.pow(y - yA, 2));
-        }
-
-        // Projeção escalar do ponto no segmento normalizado entre 0 e 1
-        double t = produtoEscalar / comprimentoAB2;
-
-        // Verifica se a projeção está dentro do segmento
-        if (t < 0) {
-            // Mais perto do ponto A
-            return Math.sqrt(Math.pow(x - xA, 2) + Math.pow(y - yA, 2));
-        } else if (t > 1) {
-            // Mais perto do ponto B
-            return Math.sqrt(Math.pow(x - xB, 2) + Math.pow(y - yB, 2));
-        }
-
-        // Projeção está dentro do segmento, calcular ponto projetado
-        double Px = xA + t * ABx;
-        double Py = yA + t * ABy;
-
-        // Distância do ponto (x, y) para o ponto projetado (Px, Py)
-        return Math.sqrt(Math.pow(x - Px, 2) + Math.pow(y - Py, 2));
     }
 
 }

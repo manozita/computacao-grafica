@@ -1,4 +1,5 @@
 package aplicacao;
+import controller.*;
 
 /**
  * Aplicacao para testar primitivos graficos.

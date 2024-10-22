@@ -1,4 +1,5 @@
-package aplicacao;
+package controller;
+import aplicacao.*;
 
 /**
  * Cria um tipo enumerado (enum)
@@ -7,5 +8,5 @@ package aplicacao;
  * @version 20220815
  */
 public enum TipoPrimitivo {
-    PONTO, RETA, CIRCULO, RETANGULO, TRIANGULO, DELETAR, NENHUM
+    PONTO, RETA, CIRCULO, RETANGULO, TRIANGULO, SELECIONAR, NENHUM
 }
