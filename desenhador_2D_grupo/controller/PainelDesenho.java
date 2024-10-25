@@ -118,7 +118,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             y1 = e.getY();
             // IDEIA: na hora de selecionar, destacar a figura de alguma forma
             Select selecao = new Select(this);
-            //deletarPrimitivo(x1, y1);
+            selecao.selecionar(x1, y1);
         } else if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO || tipo == TipoPrimitivo.RETANGULO){ // DOIS clicks do mouse
             if (primeiraVez == true) { // Se for o primeiro click do mouse
                 x1 = e.getX();

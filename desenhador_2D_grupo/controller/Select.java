@@ -1,11 +1,13 @@
 package controller;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.Graphics;
 
 import java.lang.Math;
 
 import ponto.FiguraPontos;
 import reta.FiguraRetas;
+import controller.TipoPrimitivo;
 import circulo.FiguraCirculos;
 import armazenamento.Array;
 
@@ -22,8 +24,8 @@ public class Select
     public Select (PainelDesenho painel) {
         this.painel = painel;
         tolerancia = painel.getEsp()/2 + 4;  // Erro do clique para deletar uma figura
+        
     }
-    
     public void selecionar(Integer x, Integer y) {
         boolean selecionado = false; // Verificador de seleção
         int i = painel.formas.getTamanho()-1;  // Indice do ultimo elemento
@@ -36,37 +38,27 @@ public class Select
             if(t == TipoPrimitivo.PONTO)
             {
                 if(selecionarPonto(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), i))    // Verifica se da pra apagar
-                {
                     selecionado = true;
-                }
             }
             else if(t == TipoPrimitivo.RETA)
             {
                 if(selecionarReta(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), painel.formas.getFigura(i).getX2(), painel.formas.getFigura(i).getY2(), i))
-                {
                     selecionado = true;
-                }
             }
             else if(t == TipoPrimitivo.RETANGULO)
             {
                 if(selecionarRetangulo(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), painel.formas.getFigura(i).getX2(), painel.formas.getFigura(i).getY2(), i))
-                {
                     selecionado = true;                
-                }
             }
             else if(t == TipoPrimitivo.CIRCULO)
             {
                 if(selecionarCirculo(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), painel.formas.getFigura(i).getX2(), painel.formas.getFigura(i).getY2(), i))
-                {
                     selecionado = true;
-                }
             }
             else if(t == TipoPrimitivo.TRIANGULO)
             {
                 if(selecionarTriangulo(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), painel.formas.getFigura(i).getX2(), painel.formas.getFigura(i).getY2(), painel.formas.getFigura(i).getX3(), painel.formas.getFigura(i).getY3(), i))
-                {
                     selecionado = true;
-                }
             }
             i--;
         }        
@@ -77,22 +69,29 @@ public class Select
         d = Math.sqrt((xP-x)*(xP-x)+(yP-y)*(yP-y));
         if(d <= tolerancia)
         {
-            
+            Graphics g = painel.getGraphics();
+            if (painel.getTipo() == TipoPrimitivo.DELETAR) {
+                FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                painel.formas.apagarElemento(i);
+            }
             return true;
         }
         return false;
-    } 
-
+    }
     public boolean selecionarReta(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, int i)
     {
         // Fórmula da distância ponto para reta
         double distancia = distanciaParaAresta(x, y, x1R, y1R, x2R, y2R);
         if (distancia <= tolerancia) { // Tolerância de 4 pixels
+            Graphics g = painel.getGraphics();
+            if (painel.getTipo() == TipoPrimitivo.DELETAR) {
+                FiguraRetas.desenharReta(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                painel.formas.apagarElemento(i);
+            }
             return true;
         }
         return false;
     }
-
     public boolean selecionarRetangulo(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, int i) {
         // Definindo as quatro arestas do retângulo
         boolean proximoAresta1 = distanciaParaAresta(x, y, x1R, y1R, x2R, y1R) <= tolerancia; // Aresta superior
@@ -102,12 +101,15 @@ public class Select
 
         // Se o ponto estiver próximo de alguma das arestas, apagamos o retângulo
         if (proximoAresta1 || proximoAresta2 || proximoAresta3 || proximoAresta4) {
+            Graphics g = painel.getGraphics();
+            if (painel.getTipo() == TipoPrimitivo.DELETAR) {
+                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                painel.formas.apagarElemento(i);
+            }
             return true;
         }
-
         return false;
     }
-
     public boolean selecionarCirculo(Integer x, Integer y, Integer xC, Integer yC, Integer xB, Integer yB, int i) {
         // Cálculo do raio com base na distância entre o centro (xC, yC) e o ponto na borda (xB, yB)
         double raio = Math.sqrt((xB - xC) * (xB - xC) + (yB - yC) * (yB - yC));
@@ -117,11 +119,15 @@ public class Select
 
         // Verifica se a distância do clique é aproximadamente igual ao raio
         if (Math.abs(distancia - raio) <= 4) { // Tolerância de 4 pixels
+            Graphics g = painel.getGraphics();
+            if (painel.getTipo() == TipoPrimitivo.DELETAR) {
+                FiguraCirculos.desenharCirculo(g, xC, yC, xB, yB, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                painel.formas.apagarElemento(i);
+            }
             return true;
         }
         return false;
     }
-
     public boolean selecionarTriangulo(Integer x, Integer y, Integer x1T, Integer y1T, Integer x2T, Integer y2T, Integer x3T, Integer y3T, int i) {
         boolean proximoAresta1 = distanciaParaAresta(x, y, x1T, y1T, x2T, y2T) <= tolerancia;
         boolean proximoAresta2 = distanciaParaAresta(x, y, x2T, y2T, x3T, y3T) <= tolerancia;
@@ -130,11 +136,15 @@ public class Select
         // Se o ponto estiver próximo a uma das arestas, apagamos o triângulo
         if (proximoAresta1 || proximoAresta2 || proximoAresta3)
         {
+            Graphics g = painel.getGraphics();
+            if (painel.getTipo() == TipoPrimitivo.DELETAR) {
+                FiguraRetas.desenharTriangulo(g, x1T, y1T, x2T, y2T, x3T, y3T, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                painel.formas.apagarElemento(i);
+            }
             return true;
         }
         return false;
     }
-    
     private double distanciaParaAresta(Integer x, Integer y, Integer xA, Integer yA, Integer xB, Integer yB) {
         // Vetores (ponto A para o ponto B) e (ponto A para o ponto P)
         double ABx = xB - xA;
@@ -172,4 +182,6 @@ public class Select
         // Distância do ponto (x, y) para o ponto projetado (Px, Py)
         return Math.sqrt(Math.pow(x - Px, 2) + Math.pow(y - Py, 2));
     }
+    
+    
 }
