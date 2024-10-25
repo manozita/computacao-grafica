@@ -5,6 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import javax.swing.UIManager;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,7 +25,7 @@ import armazenamento.Array;
  */
 public class PainelDesenho extends JPanel implements MouseListener, MouseMotionListener {
 
-    JLabel msg;                 // Label para mensagens
+    JLabel coord;                 // Label para mensagens
     TipoPrimitivo tipo;         // Tipo do primitivo
     Color corAtual;             // Cor atual do primitivo
     int esp;                    // Espessura, diâmetro do ponto
@@ -37,16 +38,17 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     /**
      * Constroi o painel de desenho
      *
-     * @param msg mensagem a ser escrita no rodape do painel
+     * @param coord mensagem a ser escrita no rodape do painel
      * @param tipo tipo atual do primitivo
      * @param corAtual cor atual do primitivo
      * @param esp espessura atual do primitivo
      */
-    public PainelDesenho (JLabel msg, TipoPrimitivo tipo, Color corAtual, int esp) {
+    public PainelDesenho (JLabel coord, TipoPrimitivo tipo, Color corAtual, int esp) {
         setTipo(tipo);
-        setMsg(msg);
+        setCoord(coord);
         setCorAtual(corAtual);
         setEsp(esp);
+        this.setBackground(UIManager.getColor("Panel.background")); // acessa a cor padrão que o Swing utiliza para painéis
 
         // Adiciona "ouvidor" de eventos de mouse
         this.addMouseListener(this); 
@@ -82,12 +84,12 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         return this.corAtual;
     }
 
-    public void setMsg (JLabel msg) {               // Altera o valor da mensagem exibida no rodapé
-        this.msg = msg;
+    public void setCoord (JLabel coord) {               // Altera o valor da mensagem exibida no rodapé
+        this.coord = coord;
     }
 
     public JLabel getMsg () {                       // Retorna o valor da mensagem exibida no rodapé
-        return this.msg;
+        return this.coord;
     }
 
     /**
@@ -111,7 +113,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             x1 = e.getX();
             y1 = e.getY();
             paint(g);       // Pega as coordenadas e pinta um ponto
-        } else if(tipo == TipoPrimitivo.SELECIONAR) {
+        } else if(tipoDeSelecao()) {
             x1 = e.getX();
             y1 = e.getY();
             // IDEIA: na hora de selecionar, destacar a figura de alguma forma
@@ -164,13 +166,13 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      *
      * @param e dados do evento do mouse
      */
-    public void mouseReleased(MouseEvent e) { 
-        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.SELECIONAR) {
+    public void mouseReleased(MouseEvent e) {
+        if (tipo != TipoPrimitivo.TRIANGULO && !tipoDeSelecao()) {
             Graphics g = getGraphics();
             x2 = (int)e.getX();
             y2 = (int)e.getY();
             primeiraVez = true;
-            this.msg.setText("("+e.getX() + ", " + e.getY() + ") - " + getTipo());
+            this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
             paint(g);
         }
 
@@ -182,7 +184,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
             }
         }
-        else if(tipo != TipoPrimitivo.SELECIONAR)
+        else if(!tipoDeSelecao())
         {
             formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
         }
@@ -197,13 +199,13 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void mouseDragged(MouseEvent e) {
         Graphics g = getGraphics();
         redesenharPainel(g);
-        if (tipo != TipoPrimitivo.TRIANGULO && tipo != TipoPrimitivo.SELECIONAR) {
+        if (tipo != TipoPrimitivo.TRIANGULO && !tipoDeSelecao()) {
             //Graphics g = getGraphics();
             xant = x2;
             yant = y2;
             x2 = (int)e.getX();
             y2 = (int)e.getY();
-            this.msg.setText("("+e.getX() + ", " + e.getY() + ") - " + getTipo());
+            this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
             paint(g);
         }
     }
@@ -214,7 +216,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param e dados do evento do mouse
      */
     public void mouseMoved(MouseEvent e) {
-        this.msg.setText("("+e.getX() + ", " + e.getY() + ") - " + getTipo());
+        this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
     }
 
     /**
@@ -263,25 +265,15 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     {
         for (int i = 0; i < formas.getTamanho(); i++) {
             if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
-            {
                 FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
-            {
                 FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETANGULO)
-            {
                 FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.CIRCULO)
-            {
                 FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.TRIANGULO)
-            {
                 FiguraRetas.desenharTriangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            }
         }
     }
 
@@ -291,7 +283,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         {
             if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
             {
-                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), getBackground());
+                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), Color.WHITE);
             }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
             {
@@ -317,6 +309,10 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         Graphics g = getGraphics();
         limparPainel(g);
         formas.limparArray();
+    }
+    
+    private boolean tipoDeSelecao() {
+        return (tipo == TipoPrimitivo.DELETAR || tipo == TipoPrimitivo.ROTACAO || tipo == TipoPrimitivo.ESCALA || tipo == TipoPrimitivo.MOVER);
     }
 
 }

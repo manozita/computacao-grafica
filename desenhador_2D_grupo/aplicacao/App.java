@@ -1,6 +1,8 @@
 package aplicacao;
-import GUI.*;
-import controller.*;
+import GUI.Gui;
+import GUI.MainGUI;
+import controller.PainelDesenho;
+import javax.swing.JOptionPane;
 
 /**
  * Aplicacao para testar primitivos graficos.
@@ -11,6 +13,11 @@ import controller.*;
 public class App {
     public static void main(String args[]) {
         // Cria e define dimensao da janela (em pixels)
-        new MainGUI().setVisible(true);
+        int resposta = JOptionPane.showConfirmDialog(null, "MainGUI?", "Confirmação", JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            new MainGUI().setVisible(true);
+        } else {
+            new Gui(700, 600);
+        }
     }
 }

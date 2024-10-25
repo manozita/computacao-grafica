@@ -1,14 +1,14 @@
 #BlueJ package file
-objectbench.height=137
-objectbench.width=1896
+objectbench.height=136
+objectbench.width=1511
 package.divider.horizontal=0.6
-package.divider.vertical=0.8478260869565218
-package.editor.height=804
-package.editor.width=1776
+package.divider.vertical=0.814748201438849
+package.editor.height=628
+package.editor.width=1391
 package.editor.x=0
 package.editor.y=0
-package.frame.height=1056
-package.frame.width=1936
+package.frame.height=878
+package.frame.width=1550
 package.numDependencies=0
 package.numTargets=1
 package.showExtends=true
@@ -24,4 +24,4 @@ target1.showInterface=false
 target1.type=ClassTarget
 target1.width=120
 target1.x=70
-target1.y=110
+target1.y=140
