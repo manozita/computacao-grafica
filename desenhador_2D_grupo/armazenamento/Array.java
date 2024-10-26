@@ -57,4 +57,10 @@ public class Array
     {
         lista.remove(i);
     }
+    
+    public void setCoordenadas(int i, int j, int x, int y)
+    {
+        lista.get(i).setX(j, x);
+        lista.get(i).setY(j, y);
+    }
 }

@@ -103,4 +103,13 @@ public class Primitivos // define os dados da figura
     {
         return cor;
     }
+    public void setX(int i, Integer x)
+    {
+        pontos.get(i).setX(x);
+    }
+    public void setY(int i, Integer y)
+    {
+        pontos.get(i).setY(y);
+    }
+
 }
