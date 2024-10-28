@@ -48,7 +48,7 @@ public class Select
             }
             else if(t == TipoPrimitivo.RETANGULO)
             {
-                if(selecionarRetangulo(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), painel.formas.getFigura(i).getX2(), painel.formas.getFigura(i).getY2(), i))
+                if(selecionarRetangulo(x, y, painel.formas.getFigura(i).getX1(), painel.formas.getFigura(i).getY1(), painel.formas.getFigura(i).getX2(), painel.formas.getFigura(i).getY2(), painel.formas.getFigura(i).getX3(), painel.formas.getFigura(i).getY3(),painel.formas.getFigura(i).getX4(), painel.formas.getFigura(i).getY4(),i))
                     selecionado = true;                
             }
             else if(t == TipoPrimitivo.CIRCULO)
@@ -78,6 +78,16 @@ public class Select
             } else if(painel.getTipo() == TipoPrimitivo.MOVER) {
                 FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 painel.formas.setCoordenadas(i, 0, xP+10, yP+10);
+            } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
+                FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+            } else if(painel.getTipo() == TipoPrimitivo.ROTACAO) {
+                FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                double theta = Math.toRadians(90);
+
+                // Alterar (300;300) pelo ponto (x;y) dado pelo usuário
+                xP = (int)((xP - 300)*Math.cos(theta) - (yP - 300)*Math.sin(theta) + 300); 
+                yP = (int)((xP - 300)*Math.sin(theta) + (yP - 300)*Math.cos(theta) + 300);
+                painel.formas.setCoordenadas(i, 0, xP, yP);
             }
             return true;
         }
@@ -99,31 +109,31 @@ public class Select
                 painel.formas.setCoordenadas(i, 1, x2R+10, y2R+10);
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
                 FiguraRetas.desenharReta(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                // Supondo que xEscala e yEscala sejam os fatores de escala em x e y respectivamente
+                double xEscala = 2; // Exemplo de fator de escala em x
+                double yEscala = 1.5; // Exemplo de fator de escala em y
 
-                // Supondo que 'fatorDeEscala' seja o fator de escala
-                double fatorDeEscala = 2; // Exemplo de fator de escala (pode ser definido como necessário)
+                // Coordenadas do ponto clicado pelo usuário (em relação a esse ponto que a escala será aplicada)
+                double px = 300; // Coordenada x do ponto clicado
+                double py = 300; // Coordenada y do ponto clicado
 
-                // Passo 1: Calcular o ponto médio
-                double ptMedioX = (x1R + x2R) / 2.0;
-                double ptMedioY = (y1R + y2R) / 2.0;
+                // Passo 1: Deslocar p1 e p2 para a origem em relação ao ponto (px, py)
+                double x1Deslocado = x1R - px;
+                double y1Deslocado = y1R - py;
+                double x2Deslocado = x2R - px;
+                double y2Deslocado = y2R - py;
 
-                // Passo 2: Deslocar p1 e p2 para a origem em relação ao ponto médio
-                double x1Deslocado = x1R - ptMedioX;
-                double y1Deslocado = y1R - ptMedioY;
-                double x2Deslocado = x2R - ptMedioX;
-                double y2Deslocado = y2R - ptMedioY;
+                // Passo 2: Aplicar a escala separadamente para x e y
+                x1Deslocado *= xEscala;
+                y1Deslocado *= yEscala;
+                x2Deslocado *= xEscala;
+                y2Deslocado *= yEscala;
 
-                // Passo 3: Aplicar a escala
-                x1Deslocado *= fatorDeEscala;
-                y1Deslocado *= fatorDeEscala;
-                x2Deslocado *= fatorDeEscala;
-                y2Deslocado *= fatorDeEscala;
-
-                // Passo 4: Deslocar de volta para o ponto médio
-                x1R = (int)(ptMedioX + x1Deslocado);
-                y1R = (int)(ptMedioY + y1Deslocado);
-                x2R = (int)(ptMedioX + x2Deslocado);
-                y2R = (int)(ptMedioY + y2Deslocado);
+                // Passo 3: Deslocar de volta para o ponto (px, py)
+                x1R = (int)(px + x1Deslocado);
+                y1R = (int)(py + y1Deslocado);
+                x2R = (int)(px + x2Deslocado);
+                y2R = (int)(py + y2Deslocado);
 
                 // Atualizar as coordenadas dos pontos
                 painel.formas.setCoordenadas(i, 0, x1R, y1R); // Atualiza p1
@@ -132,99 +142,156 @@ public class Select
             } else if(painel.getTipo() == TipoPrimitivo.ROTACAO) {
                 FiguraRetas.desenharReta(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 double theta = Math.toRadians(90); // Ângulo de rotação em radianos
-                // Passo 1: Deslocar p2 para a origem
-                double xDeslocado = x2R - x1R;
-                double yDeslocado = y2R - y1R;
 
-                // Passo 2: Aplicar a rotação
-                double rotacaoX = xDeslocado * Math.cos(theta) - yDeslocado * Math.sin(theta);
-                double rotacaoY = xDeslocado * Math.sin(theta) + yDeslocado * Math.cos(theta);
+                // Coordenadas do ponto de rotação
+                double px = 300;
+                double py = 300;
 
-                // Passo 3: Deslocar de volta
-                x2R = x1R + (int)rotacaoX;
-                y2R = y1R + (int)rotacaoY;
+                // Passo 1: Deslocar p1 e p2 para a origem em relação ao ponto (300, 300)
+                double x1Deslocado = x1R - px;
+                double y1Deslocado = y1R - py;
+                double x2Deslocado = x2R - px;
+                double y2Deslocado = y2R - py;
 
-                // Atualizar as coordenadas do ponto final
-                painel.formas.setCoordenadas(i, 1, x2R, y2R);
+                // Passo 2: Aplicar a rotação a cada ponto em relação ao ponto de rotação (300, 300)
+                double rotacaoX1 = x1Deslocado * Math.cos(theta) - y1Deslocado * Math.sin(theta);
+                double rotacaoY1 = x1Deslocado * Math.sin(theta) + y1Deslocado * Math.cos(theta);
+
+                double rotacaoX2 = x2Deslocado * Math.cos(theta) - y2Deslocado * Math.sin(theta);
+                double rotacaoY2 = x2Deslocado * Math.sin(theta) + y2Deslocado * Math.cos(theta);
+
+                // Passo 3: Deslocar de volta para o ponto (300, 300)
+                x1R = (int)(px + rotacaoX1);
+                y1R = (int)(py + rotacaoY1);
+                x2R = (int)(px + rotacaoX2);
+                y2R = (int)(py + rotacaoY2);
+
+                // Atualizar as coordenadas dos pontos
+                painel.formas.setCoordenadas(i, 0, x1R, y1R); // Atualiza p1
+                painel.formas.setCoordenadas(i, 1, x2R, y2R); // Atualiza p2
+
             }
             return true;
         }
         return false;
     }
 
-    public boolean selecionarRetangulo(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, int i) {
+    public boolean selecionarRetangulo(Integer x, Integer y, Integer x1R, Integer y1R, Integer x2R, Integer y2R, Integer x3R, Integer y3R, Integer x4R, Integer y4R, int i) {
         // Definindo as quatro arestas do retângulo
-        boolean proximoAresta1 = distanciaParaAresta(x, y, x1R, y1R, x2R, y1R) <= tolerancia; // Aresta superior
-        boolean proximoAresta2 = distanciaParaAresta(x, y, x2R, y1R, x2R, y2R) <= tolerancia; // Aresta direita
-        boolean proximoAresta3 = distanciaParaAresta(x, y, x2R, y2R, x1R, y2R) <= tolerancia; // Aresta inferior
-        boolean proximoAresta4 = distanciaParaAresta(x, y, x1R, y2R, x1R, y1R) <= tolerancia; // Aresta esquerda
+        boolean proximoAresta1 = distanciaParaAresta(x, y, x1R, y1R, x3R, y3R) <= tolerancia; // Aresta superior
+        boolean proximoAresta2 = distanciaParaAresta(x, y, x3R, y3R, x2R, y2R) <= tolerancia; // Aresta direita
+        boolean proximoAresta3 = distanciaParaAresta(x, y, x2R, y2R, x4R, y4R) <= tolerancia; // Aresta inferior
+        boolean proximoAresta4 = distanciaParaAresta(x, y, x4R, y4R, x1R, y1R) <= tolerancia; // Aresta esquerda
 
         // Se o ponto estiver próximo de alguma das arestas, apagamos o retângulo
         if (proximoAresta1 || proximoAresta2 || proximoAresta3 || proximoAresta4) {
             Graphics g = painel.getGraphics();
             if (painel.getTipo() == TipoPrimitivo.DELETAR) {
-                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, x3R, y3R, x4R, y4R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 painel.formas.apagarElemento(i);
             } else if(painel.getTipo() == TipoPrimitivo.MOVER) {
-                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, x3R, y3R, x4R, y4R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 painel.formas.setCoordenadas(i, 0, x1R+10, y1R+10);
                 painel.formas.setCoordenadas(i, 1, x2R+10, y2R+10);
+                painel.formas.setCoordenadas(i, 2, x3R+10, y3R+10);
+                painel.formas.setCoordenadas(i, 3, x4R+10, y4R+10);
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
-                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, x3R, y3R, x4R, y4R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 // painel.formas.setCoordenadas(i, 0, x1R*2, y1R*2);
                 // painel.formas.setCoordenadas(i, 1, x2R*2, y2R*2);
 
-                // Supondo que 'fatorDeEscala' seja o fator de escala
-                double fatorDeEscala = 2; // Exemplo de fator de escala (pode ser definido como necessário)
+                // Supondo que xEscala e yEscala sejam os fatores de escala em x e y respectivamente
+                double xEscala = 2; // Exemplo de fator de escala em x
+                double yEscala = 1.5; // Exemplo de fator de escala em y
 
-                // Passo 1: Calcular o ponto médio
-                double ptMedioX = (x1R + x2R) / 2.0;
-                double ptMedioY = (y1R + y2R) / 2.0;
+                // Coordenadas do ponto de referência para a escala
+                double refX = 300;
+                double refY = 300;
 
-                // Passo 2: Deslocar p1 e p2 para a origem em relação ao ponto médio
-                double x1Deslocado = x1R - ptMedioX;
-                double y1Deslocado = y1R - ptMedioY;
-                double x2Deslocado = x2R - ptMedioX;
-                double y2Deslocado = y2R - ptMedioY;
+                // Deslocar cada ponto para a origem em relação ao ponto de referência (300, 300)
+                double x1Deslocado = x1R - refX;
+                double y1Deslocado = y1R - refY;
+                double x2Deslocado = x2R - refX;
+                double y2Deslocado = y2R - refY;
+                double x3Deslocado = x3R - refX;
+                double y3Deslocado = y3R - refY;
+                double x4Deslocado = x4R - refX;
+                double y4Deslocado = y4R - refY;
 
-                // Passo 3: Aplicar a escala
-                x1Deslocado *= fatorDeEscala;
-                y1Deslocado *= fatorDeEscala;
-                x2Deslocado *= fatorDeEscala;
-                y2Deslocado *= fatorDeEscala;
+                // Aplicar a escala separadamente para x e y
+                x1Deslocado *= xEscala;
+                y1Deslocado *= yEscala;
+                x2Deslocado *= xEscala;
+                y2Deslocado *= yEscala;
+                x3Deslocado *= xEscala;
+                y3Deslocado *= yEscala;
+                x4Deslocado *= xEscala;
+                y4Deslocado *= yEscala;
 
-                // Passo 4: Deslocar de volta para o ponto médio
-                x1R = (int)(ptMedioX + x1Deslocado);
-                y1R = (int)(ptMedioY + y1Deslocado);
-                x2R = (int)(ptMedioX + x2Deslocado);
-                y2R = (int)(ptMedioY + y2Deslocado);
+                // Deslocar de volta para o ponto de referência (300, 300)
+                x1R = (int)(refX + x1Deslocado);
+                y1R = (int)(refY + y1Deslocado);
+                x2R = (int)(refX + x2Deslocado);
+                y2R = (int)(refY + y2Deslocado);
+                x3R = (int)(refX + x3Deslocado);
+                y3R = (int)(refY + y3Deslocado);
+                x4R = (int)(refX + x4Deslocado);
+                y4R = (int)(refY + y4Deslocado);
 
                 // Atualizar as coordenadas dos pontos
                 painel.formas.setCoordenadas(i, 0, x1R, y1R); // Atualiza p1
                 painel.formas.setCoordenadas(i, 1, x2R, y2R); // Atualiza p2
+                painel.formas.setCoordenadas(i, 2, x3R, y3R); // Atualiza p3
+                painel.formas.setCoordenadas(i, 3, x4R, y4R); // Atualiza p4
+
             } else if (painel.getTipo() == TipoPrimitivo.ROTACAO) {
-                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                double theta = Math.toRadians(90); // Ângulo de rotação em radianos
+                FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, x3R, y3R, x4R, y4R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                // Ângulo de rotação em radianos
+                double theta = Math.toRadians(45); // Exemplo de ângulo de 90 graus
 
-                // Define o centro do retângulo
-                double xCentro = (x1R + x2R) / 2.0;
-                double yCentro = (y1R + y2R) / 2.0;
+                // Coordenadas do ponto de referência para a rotação
+                double refX = 300;
+                double refY = 300;
 
-                // Definir os quatro vértices do retângulo usando x1R, y1R e x2R, y2R
-                int x3R = x2R;
-                int y3R = y1R;
-                int x4R = x1R;
-                int y4R = y2R;
+                // Passo 1: Deslocar cada ponto para a origem em relação ao ponto de referência (300, 300)
+                double x1Deslocado = x1R - refX;
+                double y1Deslocado = y1R - refY;
+                double x2Deslocado = x2R - refX;
+                double y2Deslocado = y2R - refY;
+                double x3Deslocado = x3R - refX;
+                double y3Deslocado = y3R - refY;
+                double x4Deslocado = x4R - refX;
+                double y4Deslocado = y4R - refY;
 
-                // Rotaciona cada ponto do retângulo
-                int[] novoPonto1 = rotacionarPonto(x1R, y1R, xCentro, yCentro, theta);
-                int[] novoPonto2 = rotacionarPonto(x2R, y2R, xCentro, yCentro, theta);
-                int[] novoPonto3 = rotacionarPonto(x3R, y3R, xCentro, yCentro, theta);
-                int[] novoPonto4 = rotacionarPonto(x4R, y4R, xCentro, yCentro, theta);
+                // Passo 2: Aplicar a rotação a cada ponto
+                double rotacaoX1 = x1Deslocado * Math.cos(theta) - y1Deslocado * Math.sin(theta);
+                double rotacaoY1 = x1Deslocado * Math.sin(theta) + y1Deslocado * Math.cos(theta);
 
-                // Atualizar as coordenadas do retângulo
-                painel.formas.setCoordenadas(i, 0, novoPonto1[0], novoPonto1[1]);
-                painel.formas.setCoordenadas(i, 1, novoPonto2[0], novoPonto2[1]);
+                double rotacaoX2 = x2Deslocado * Math.cos(theta) - y2Deslocado * Math.sin(theta);
+                double rotacaoY2 = x2Deslocado * Math.sin(theta) + y2Deslocado * Math.cos(theta);
+
+                double rotacaoX3 = x3Deslocado * Math.cos(theta) - y3Deslocado * Math.sin(theta);
+                double rotacaoY3 = x3Deslocado * Math.sin(theta) + y3Deslocado * Math.cos(theta);
+
+                double rotacaoX4 = x4Deslocado * Math.cos(theta) - y4Deslocado * Math.sin(theta);
+                double rotacaoY4 = x4Deslocado * Math.sin(theta) + y4Deslocado * Math.cos(theta);
+
+                // Passo 3: Deslocar de volta para o ponto de referência (300, 300)
+                x1R = (int)(refX + rotacaoX1);
+                y1R = (int)(refY + rotacaoY1);
+                x2R = (int)(refX + rotacaoX2);
+                y2R = (int)(refY + rotacaoY2);
+                x3R = (int)(refX + rotacaoX3);
+                y3R = (int)(refY + rotacaoY3);
+                x4R = (int)(refX + rotacaoX4);
+                y4R = (int)(refY + rotacaoY4);
+
+                // Atualizar as coordenadas dos pontos
+                painel.formas.setCoordenadas(i, 0, x1R, y1R); // Atualiza p1
+                painel.formas.setCoordenadas(i, 1, x2R, y2R); // Atualiza p2
+                painel.formas.setCoordenadas(i, 2, x3R, y3R); // Atualiza p3
+                painel.formas.setCoordenadas(i, 3, x4R, y4R); // Atualiza p4
+
             }
             return true;
         }
@@ -239,7 +306,7 @@ public class Select
         double distancia = Math.sqrt((xC - x) * (xC - x) + (yC - y) * (yC - y));
 
         // Verifica se a distância do clique é aproximadamente igual ao raio
-        if (Math.abs(distancia - raio) <= 4) { // Tolerância de 4 pixels
+        if (Math.abs(distancia - raio) <= tolerancia) { // Tolerância de 4 pixels
             Graphics g = painel.getGraphics();
             if (painel.getTipo() == TipoPrimitivo.DELETAR) {
                 FiguraCirculos.desenharCirculo(g, xC, yC, xB, yB, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
@@ -250,25 +317,36 @@ public class Select
                 painel.formas.setCoordenadas(i, 1, xB+10, yB+10);                
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
                 FiguraCirculos.desenharCirculo(g, xC, yC, xB, yB, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-
                 // Supondo que 'fatorDeEscala' seja o fator de escala
-                double fatorDeEscala = 2; // Exemplo de fator de escala (pode ser definido como necessário)
+                double fatorDeEscala = 2; // Exemplo de fator de escala
 
-                // Passo 1: Calcular o vetor de deslocamento da borda em relação ao centro
-                double xDeslocado = xB - xC;
-                double yDeslocado = yB - yC;
+                // Coordenadas do ponto de referência para a escala
+                double refX = 300;
+                double refY = 300;
 
-                // Passo 2: Aplicar a escala
-                xDeslocado *= fatorDeEscala;
-                yDeslocado *= fatorDeEscala;
+                // Passo 1: Calcular o vetor de deslocamento do centro em relação ao ponto de referência (300, 300)
+                double xCDeslocado = xC - refX;
+                double yCDeslocado = yC - refY;
 
-                // Passo 3: Deslocar de volta para o centro
-                xB = (int)(xC + xDeslocado);
-                yB = (int)(yC + yDeslocado);
+                // Passo 2: Calcular o vetor de deslocamento da borda em relação ao ponto de referência
+                double xBDeslocado = xB - refX;
+                double yBDeslocado = yB - refY;
 
-                // Atualizar as coordenadas da borda
+                // Passo 3: Aplicar a escala a ambos os deslocamentos
+                xCDeslocado *= fatorDeEscala;
+                yCDeslocado *= fatorDeEscala;
+                xBDeslocado *= fatorDeEscala;
+                yBDeslocado *= fatorDeEscala;
+
+                // Passo 4: Deslocar de volta para o ponto de referência
+                xC = (int)(refX + xCDeslocado);
+                yC = (int)(refY + yCDeslocado);
+                xB = (int)(refX + xBDeslocado);
+                yB = (int)(refY + yBDeslocado);
+
+                // Atualizar as coordenadas do centro e da borda
+                painel.formas.setCoordenadas(i, 0, xC, yC); // Atualiza o centro
                 painel.formas.setCoordenadas(i, 1, xB, yB); // Atualiza a borda
-
             }
             return true;
         }
@@ -294,40 +372,37 @@ public class Select
                 painel.formas.setCoordenadas(i, 2, x3T+10, y3T+10);
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
                 FiguraRetas.desenharTriangulo(g, x1T, y1T, x2T, y2T, x3T, y3T, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                // painel.formas.setCoordenadas(i, 0, x1T*2, y1T*2);
-                // painel.formas.setCoordenadas(i, 1, x2T*2, y2T*2);
-                // painel.formas.setCoordenadas(i, 2, x3T*2, y3T*2);
+                // Supondo que 'fatorDeEscalaX' e 'fatorDeEscalaY' sejam os fatores de escala
+                double fatorDeEscalaX = 2; // Fator de escala no eixo X
+                double fatorDeEscalaY = 1.5; // Fator de escala no eixo Y
 
-                // Supondo que 'fatorDeEscala' seja o fator de escala
-                double fatorDeEscala = 2; // Exemplo de fator de escala (pode ser definido como necessário)
+                // Coordenadas do ponto de referência para a escala
+                double refX = 300;
+                double refY = 300;
 
-                // Passo 1: Calcular o baricentro/ponto medio
-                double ptoMedioX = (x1T + x2T + x3T) / 3.0;
-                double ptoMedioY = (y1T + y2T + y3T) / 3.0;
+                // Passo 1: Calcular o vetor de deslocamento dos pontos em relação ao ponto de referência (300, 300)
+                double x1Deslocado = x1T - refX;
+                double y1Deslocado = y1T - refY;
+                double x2Deslocado = x2T - refX;
+                double y2Deslocado = y2T - refY;
+                double x3Deslocado = x3T - refX;
+                double y3Deslocado = y3T - refY;
 
-                // Passo 2: Deslocar os pontos para a origem em relação ao ptoMedio
-                double x1Deslocado = x1T - ptoMedioX;
-                double y1Deslocado = y1T - ptoMedioY;
-                double x2Deslocado = x2T - ptoMedioX;
-                double y2Deslocado = y2T - ptoMedioY;
-                double x3Deslocado = x3T - ptoMedioX;
-                double y3Deslocado = y3T - ptoMedioY;
+                // Passo 2: Aplicar a escala
+                x1Deslocado *= fatorDeEscalaX;
+                y1Deslocado *= fatorDeEscalaY;
+                x2Deslocado *= fatorDeEscalaX;
+                y2Deslocado *= fatorDeEscalaY;
+                x3Deslocado *= fatorDeEscalaX;
+                y3Deslocado *= fatorDeEscalaY;
 
-                // Passo 3: Aplicar a escala
-                x1Deslocado *= fatorDeEscala;
-                y1Deslocado *= fatorDeEscala;
-                x2Deslocado *= fatorDeEscala;
-                y2Deslocado *= fatorDeEscala;
-                x3Deslocado *= fatorDeEscala;
-                y3Deslocado *= fatorDeEscala;
-
-                // Passo 4: Deslocar de volta para o ptoMedio
-                x1T = (int)(ptoMedioX + x1Deslocado);
-                y1T = (int)(ptoMedioY + y1Deslocado);
-                x2T = (int)(ptoMedioX + x2Deslocado);
-                y2T = (int)(ptoMedioY + y2Deslocado);
-                x3T = (int)(ptoMedioX + x3Deslocado);
-                y3T = (int)(ptoMedioY + y3Deslocado);
+                // Passo 3: Deslocar de volta para o ponto de referência
+                x1T = (int)(refX + x1Deslocado);
+                y1T = (int)(refY + y1Deslocado);
+                x2T = (int)(refX + x2Deslocado);
+                y2T = (int)(refY + y2Deslocado);
+                x3T = (int)(refX + x3Deslocado);
+                y3T = (int)(refY + y3Deslocado);
 
                 // Atualizar as coordenadas dos pontos do triângulo
                 painel.formas.setCoordenadas(i, 0, x1T, y1T); // Atualiza o ponto 1
@@ -337,20 +412,21 @@ public class Select
             } else if(painel.getTipo() == TipoPrimitivo.ROTACAO) {
                 FiguraRetas.desenharTriangulo(g, x1T, y1T, x2T, y2T, x3T, y3T, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 double theta = Math.toRadians(90); // Ângulo de rotação em radianos
-            
-                // Define o centro do triângulo (baricentro)
-                double xCentro = (x1T + x2T + x3T) / 3.0;
-                double yCentro = (y1T + y2T + y3T) / 3.0;
-            
-                // Rotaciona cada ponto do triângulo
-                int[] novoPonto1 = rotacionarPonto(x1T, y1T, xCentro, yCentro, theta);
-                int[] novoPonto2 = rotacionarPonto(x2T, y2T, xCentro, yCentro, theta);
-                int[] novoPonto3 = rotacionarPonto(x3T, y3T, xCentro, yCentro, theta);
-            
+
+                // Ponto de referência para a rotação
+                double refX = 300;
+                double refY = 300;
+
+                // Rotaciona cada ponto do triângulo em relação ao ponto de referência
+                int[] novoPonto1 = rotacionarPonto(x1T, y1T, refX, refY, theta);
+                int[] novoPonto2 = rotacionarPonto(x2T, y2T, refX, refY, theta);
+                int[] novoPonto3 = rotacionarPonto(x3T, y3T, refX, refY, theta);
+
                 // Atualizar as coordenadas do triângulo
-                painel.formas.setCoordenadas(i, 0, novoPonto1[0], novoPonto1[1]);
-                painel.formas.setCoordenadas(i, 1, novoPonto2[0], novoPonto2[1]);
-                painel.formas.setCoordenadas(i, 2, novoPonto3[0], novoPonto3[1]);
+                painel.formas.setCoordenadas(i, 0, novoPonto1[0], novoPonto1[1]); // Atualiza o ponto 1
+                painel.formas.setCoordenadas(i, 1, novoPonto2[0], novoPonto2[1]); // Atualiza o ponto 2
+                painel.formas.setCoordenadas(i, 2, novoPonto3[0], novoPonto3[1]); // Atualiza o ponto 3
+
             }
             return true;
         }
@@ -394,20 +470,21 @@ public class Select
         // Distância do ponto (x, y) para o ponto projetado (Px, Py)
         return Math.sqrt(Math.pow(x - Px, 2) + Math.pow(y - Py, 2));
     }
-    
-    int[] rotacionarPonto(int x, int y, double xCentro, double yCentro, double theta) {
-        // Passo 1: Deslocar para a origem
-        double xDeslocado = x - xCentro;
-        double yDeslocado = y - yCentro;
 
-        // Passo 2: Aplicar rotação
-        double rotacaoX = xDeslocado * Math.cos(theta) - yDeslocado * Math.sin(theta);
-        double rotacaoY = xDeslocado * Math.sin(theta) + yDeslocado * Math.cos(theta);
+    public int[] rotacionarPonto(double x, double y, double refX, double refY, double theta) {
+        // Desloca o ponto para a origem em relação ao ponto de referência
+        double xDeslocado = x - refX;
+        double yDeslocado = y - refY;
 
-        // Passo 3: Deslocar de volta
-        int xNovo = (int)(xCentro + rotacaoX);
-        int yNovo = (int)(yCentro + rotacaoY);
+        // Aplica a rotação
+        double novoX = xDeslocado * Math.cos(theta) - yDeslocado * Math.sin(theta);
+        double novoY = xDeslocado * Math.sin(theta) + yDeslocado * Math.cos(theta);
 
-        return new int[] { xNovo, yNovo };
+        // Desloca de volta para o ponto de referência
+        novoX += refX;
+        novoY += refY;
+
+        return new int[] {(int) novoX, (int) novoY}; // Retorna as novas coordenadas
     }
+
 }

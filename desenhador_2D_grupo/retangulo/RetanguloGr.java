@@ -30,97 +30,12 @@ public class RetanguloGr extends Retangulo {
      * @param nome String. Nome da Retangulo
      * @param esp int. Espessura da Retangulo
      */
-    public RetanguloGr(int x1, int y1, int x2, int y2, Color cor, String nome, int esp){
-        super (x1, y1, x2, y2);
+    public RetanguloGr(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, Color cor, String nome, int esp){
+        super (x1, y1, x2, y2, x3, y3, x4, y4);
         setCorRetangulo(cor);
         setNomeRetangulo(nome);
         setEspRetangulo(esp);
-    }    
-
-    /**
-     * RetanguloGr - Constroi uma Retangulo grafica
-     *
-     * @param x1 int. Coordenada x1
-     * @param y1 int. Coordenada y1
-     * @param x2 int. Coordenada x2
-     * @param y2 int. Coordenada y2
-     * @param cor Color. Cor da Retangulo
-     */
-    public RetanguloGr(int x1, int y1, int x2, int y2, Color cor){
-        super (x1, y1, x2, y2);
-        setCorRetangulo(cor);
-        setNomeRetangulo("");
-    }   
-
-    /**
-     * RetanguloGr - Constroi uma Retangulo grafica
-     *
-     * @param x1 int. Coordenada x1
-     * @param y1 int. Coordenada y1
-     * @param x2 int. Coordenada x2
-     * @param y2 int. Coordenada y2
-     * @param cor Color. Cor da Retangulo
-     * @param esp int. Espessura da Retangulo
-     */
-    public RetanguloGr(int x1, int y1, int x2, int y2, Color cor, int esp){
-        super (x1, y1, x2, y2);
-        setCorRetangulo(cor);
-        setNomeRetangulo("");
-        setEspRetangulo(esp);
-    }   
-
-    /**
-     * RetanguloGr - Constroi uma Retangulo grafica
-     *
-     * @param x1 int. Coordenada x1
-     * @param y1 int. Coordenada y1
-     * @param x2 int. Coordenada x2
-     * @param y2 int. Coordenada y2
-     */
-    public RetanguloGr(int x1, int y1, int x2, int y2){
-        super (x1, y1, x2, y2);
-        setCorRetangulo(Color.black);
-        setNomeRetangulo("");
-    }   
-
-    /**
-     * RetanguloGr - Constroi uma Retangulo grafica
-     *
-     * @param p1 PontoGr. Ponto grafico p1 (x1, y1)
-     * @param p2 PontoGr. Ponto grafico p2 (x2, y2)
-     */
-    public RetanguloGr(PontoGr p1, PontoGr p2){
-        super(p1, p2);
-        setCorRetangulo(Color.black);
-        setNomeRetangulo("");
-    }    
-
-    /**
-     * RetanguloGr - Constroi uma Retangulo grafica
-     *
-     * @param p1 PontoGr. Ponto grafico p1 (x1, y1)
-     * @param p2 PontoGr. Ponto grafico p2 (x2, y2)
-     * @param cor Color. Cor da Retangulo
-     */
-    public RetanguloGr(PontoGr p1, PontoGr p2, Color cor){
-        super(p1, p2);
-        setCorRetangulo(cor);
-        setNomeRetangulo("");
-    }    
-
-    /**
-     * RetanguloGr - Constroi uma Retangulo grafica
-     *
-     * @param p1 PontoGr. Ponto grafico p1 (x1, y1)
-     * @param p2 PontoGr. Ponto grafico p2 (x2, y2)
-     * @param cor Color. Cor da Retangulo
-     * @param nome String. Nome da Retangulo
-     */
-    public RetanguloGr(PontoGr p1, PontoGr p2, Color cor, String str){
-        super(p1, p2);
-        setCorRetangulo(cor);
-        setNomeRetangulo(str);
-    }    
+    }        
 
     /**
      * Altera a cor da Retangulo.
@@ -196,13 +111,13 @@ public class RetanguloGr extends Retangulo {
      * @param g Graphics. Classe com os metodos graficos do Java
      */
     public void desenharRetangulo(Graphics g){
-        RetaGr r = new RetaGr((int)p1.getX(), (int)p1.getY(), (int)p2.getX(), (int)p1.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
+        RetaGr r = new RetaGr((int)p1.getX(), (int)p1.getY(), (int)p3.getX(), (int)p3.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
         r.desenharReta(g);
-        RetaGr s = new RetaGr((int)p2.getX(), (int)p1.getY(), (int)p2.getX(), (int)p2.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
+        RetaGr s = new RetaGr((int)p3.getX(), (int)p3.getY(), (int)p2.getX(), (int)p2.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
         s.desenharReta(g);
-        RetaGr t = new RetaGr((int)p2.getX(), (int)p2.getY(), (int)p1.getX(), (int)p2.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
+        RetaGr t = new RetaGr((int)p2.getX(), (int)p2.getY(), (int)p4.getX(), (int)p4.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
         t.desenharReta(g);
-        RetaGr h = new RetaGr((int)p1.getX(), (int)p2.getY(), (int)p1.getX(), (int)p1.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
+        RetaGr h = new RetaGr((int)p4.getX(), (int)p4.getY(), (int)p1.getX(), (int)p1.getY(), getCorRetangulo(), getNomeRetangulo(), getEspRetangulo());
         h.desenharReta(g);
     }
 }

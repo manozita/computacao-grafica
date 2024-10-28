@@ -13,9 +13,9 @@ public class Array
      * Método adicionarFigura
      * Entra com parametros para a figura e adiciona no array list
      */
-    public void adicionarFigura(TipoPrimitivo t, Integer x1, Integer y1, Integer x2, Integer y2, Integer x3, Integer y3, Integer esp, Color c)
+    public void adicionarFigura(TipoPrimitivo t, Integer x1, Integer y1, Integer x2, Integer y2, Integer x3, Integer y3, Integer x4, Integer y4, Integer esp, Color c)
     {
-        figura = new Primitivos(t, x1, y1, x2, y2, x3, y3, esp, c); // novo primitivo com os dados da figura
+        figura = new Primitivos(t, x1, y1, x2, y2, x3, y3, x4, y4, esp, c); // novo primitivo com os dados da figura
         lista.add(figura); // adiciona na lista
     }
     

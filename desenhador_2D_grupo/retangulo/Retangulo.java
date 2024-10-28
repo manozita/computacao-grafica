@@ -1,6 +1,5 @@
 package retangulo;
 import ponto.Ponto;
-import reta.*;
 
 /**
  * Retangulo matematica.
@@ -11,53 +10,25 @@ import reta.*;
 public class Retangulo {
  
     // Atributos da Retangulo
-    public Ponto p1, p2;
+    public Ponto p1, p2, p3, p4;
 
     /**
-     * Constroi uma Retangulo com valores (int) de x1, y1 e x2, y2
+     * Constroi uma Retangulo com valores (int) de x1, y1, x2, y2, x3, y3 e x4, y4
      *
      * @param x1 coordenada x de p1
      * @param y1 coordenada y de p1
      * @param x2 coordenada x de p2
      * @param y2 coordenada y de p2
+     * @param x3 coordenada x de p3
+     * @param y3 coordenada y de p3
+     * @param x4 coordenada x de p4
+     * @param y4 coordenada y de p4
      */
-    public Retangulo(int x1, int y1, int x2, int y2) {
+    public Retangulo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
         setP1(new Ponto(x1, y1));
         setP2(new Ponto(x2, y2));
-    }
-    
-    /**
-     * Constroi uma Retangulo com valores (double) de x1, y1 e x2, y2
-     *
-     * @param x1 coordenada x de p1
-     * @param y1 coordenada y de p1
-     * @param x2 coordenada x de p2
-     * @param y2 coordenada y de p2
-     */
-    public Retangulo(double x1, double y1, double x2, double y2) {
-        setP1(new Ponto(x1, y1));
-        setP2(new Ponto(x2, y2));
-    }
-    
-    /**
-     * Controi uma Retangulo com valores de p1 e p2 (externos)
-     *
-     * @param p1 Um parâmetro
-     * @param p2 Um parâmetro
-     */
-    public Retangulo(Ponto p1, Ponto p2) {
-        setP1(p1);
-        setP2(p2);
-    }
-    
-    /**
-     * Constroi uma Retangulo com dados de outra (externa)
-     *
-     * @param r Retangulo externa
-     */
-    public Retangulo (Retangulo r){
-        setP1(r.getP1());
-        setP2(r.getP2());
+        setP3(new Ponto(x3, y3));
+        setP4(new Ponto(x4, y4));
     }
     
     /**
@@ -79,6 +50,24 @@ public class Retangulo {
     }
     
     /**
+     * Altera valor de p3 de acordo com o parametro
+     *
+     * @param p valor de p3 (externo)
+     */
+    public void setP3(Ponto p){
+        this.p3 = p;
+    }
+    
+    /**
+     * Altera valor de p4 de acordo com o parametro
+     *
+     * @param p valor de p4 (externo)
+     */
+    public void setP4(Ponto p){
+        this.p4 = p;
+    }
+    
+    /**
      * Retorna valor de p1
      *
      * @return valor de p1
@@ -88,7 +77,7 @@ public class Retangulo {
     }
     
     /**
-     * Retorna p2
+     * Retorna valor de p2
      *
      * @return valor de p2
      */
@@ -96,4 +85,21 @@ public class Retangulo {
         return this.p2;
     }
     
+    /**
+     * Retorna valor de p3
+     *
+     * @return valor de p3
+     */
+    public Ponto getP3(){
+        return this.p3;
+    }
+    
+    /**
+     * Retorna valor de p4
+     *
+     * @return valor de p4
+     */
+    public Ponto getP4(){
+        return this.p4;
+    }
 }

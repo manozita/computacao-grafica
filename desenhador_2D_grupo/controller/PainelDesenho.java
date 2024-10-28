@@ -30,7 +30,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     Color corAtual;             // Cor atual do primitivo
     int esp;                    // Espessura, diâmetro do ponto
 
-    Integer x1, y1, x2, y2, x3, y3, xant, yant; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
+    Integer x1, y1, x2, y2, x3, y3, x4, y4, xant, yant; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
     int clickCount = 0;         // Contador de cliques para o triângulo
     boolean primeiraVez = true; // Verifica se foi o primeiro click do mouse, para construção das figuras
     public Array formas = new Array();
@@ -145,8 +145,8 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 y3 = e.getY();
                 clickCount = 0; // Reinicia o contador para o próximo triângulo
                 paint(g); // Pega as coordenadas e faz a figura
-                formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
-                x1 = y1 = x2 = y2 = x3 = y3 = null;
+                formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, x4, y4, getEsp(), getCorAtual());
+                x1 = y1 = x2 = y2 = x3 = y3 = x4 = y4 = null;
             }
         }
     }     
@@ -167,26 +167,37 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
      * @param e dados do evento do mouse
      */
     public void mouseReleased(MouseEvent e) {
-        if (tipo != TipoPrimitivo.TRIANGULO && !tipoDeSelecao()) {
-            Graphics g = getGraphics();
+        Graphics g = getGraphics();
+        if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO) {
             x2 = (int)e.getX();
             y2 = (int)e.getY();
             primeiraVez = true;
             this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
             paint(g);
         }
-
-        Graphics g = getGraphics();
+        else if(tipo == TipoPrimitivo.RETANGULO)
+        {
+            x2 = (int)e.getX();
+            y2 = (int)e.getY();
+            x3 = x2;
+            y3 = y1;
+            x4 = x1;
+            y4 = y2;
+            primeiraVez = true;
+            this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
+            paint(g);
+        }
+        
         if(tipo == TipoPrimitivo.TRIANGULO)
         {
             if(x1 != null && x2 != null && x3 != null)
             {
-                formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
+                formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, x4, y4, getEsp(), getCorAtual());
             }
         }
         else if(!tipoDeSelecao())
         {
-            formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, getEsp(), getCorAtual());
+            formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, x4, y4, getEsp(), getCorAtual());
         }
         redesenharPainel(g);
     } 
@@ -199,12 +210,26 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void mouseDragged(MouseEvent e) {
         Graphics g = getGraphics();
         redesenharPainel(g);
-        if (tipo != TipoPrimitivo.TRIANGULO && !tipoDeSelecao()) {
-            //Graphics g = getGraphics();
+        if (tipo == TipoPrimitivo.RETA || tipo == TipoPrimitivo.CIRCULO) {
             xant = x2;
             yant = y2;
             x2 = (int)e.getX();
             y2 = (int)e.getY();
+            primeiraVez = true;
+            this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
+            paint(g);
+        }
+        else if(tipo == TipoPrimitivo.RETANGULO)
+        {
+            xant = x2;
+            yant = y2;
+            x2 = (int)e.getX();
+            y2 = (int)e.getY();
+            x3 = x2;
+            y3 = y1;
+            x4 = x1;
+            y4 = y2;
+            primeiraVez = true;
             this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
             paint(g);
         }
@@ -237,7 +262,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             FiguraCirculos.desenharCirculo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
         }
         else if (tipo==TipoPrimitivo.RETANGULO && x1 != null && x2 != null) {   // Desenha o retângulo
-            FiguraRetas.desenharRetangulo(g, x1, y1, x2, y2, "", getEsp(), getCorAtual());
+            FiguraRetas.desenharRetangulo(g, x1, y1, x2, y2, x3, y3, x4, y4, "", getEsp(), getCorAtual());
         }
         else if (tipo==TipoPrimitivo.TRIANGULO && x1 != null && x2 != null && x3 != null) {   // Desenha o triângulo
             FiguraRetas.desenharTriangulo(g, x1, y1, x2, y2, x3, y3, "", getEsp(), getCorAtual());
@@ -257,7 +282,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             FiguraCirculos.desenharCirculo(g, x1, y1, xant, yant, "", getEsp(), getBackground());
         }
         else if (tipo==TipoPrimitivo.RETANGULO && x1 != null && xant != null) {   // Desenha o retângulo
-            FiguraRetas.desenharRetangulo(g, x1, y1, xant, yant, "", getEsp(), getBackground());
+            FiguraRetas.desenharRetangulo(g, x1, y1, xant, yant, xant, y1, x1, yant, "", getEsp(), getBackground());
         }
     }
 
@@ -269,7 +294,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
                 FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETANGULO)
-                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), formas.getFigura(i).getX4(), formas.getFigura(i).getY4(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.CIRCULO)
                 FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.TRIANGULO)
@@ -283,7 +308,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         {
             if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
             {
-                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), Color.WHITE);
+                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), getBackground());
             }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
             {
@@ -291,7 +316,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETANGULO)
             {
-                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
+                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(),  formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), formas.getFigura(i).getX4(), formas.getFigura(i).getY4(), "", formas.getFigura(i).getEsp(), getBackground());
             }
             else if(formas.getFigura(i).getTipo() == TipoPrimitivo.CIRCULO)
             {
