@@ -95,10 +95,10 @@ public class MainGUI extends JFrame {
         lblTipoAtual.setForeground(corCinzaClarissimo); // Define a cor do texto como branco
         lblTipoAtual.setFont(new Font("Arial", Font.PLAIN, 16)); // Define o tamanho da fonte
 
-        // Painéis individuais para Coordenadas, Espessura e TipoAtual
+        // Painéis individuais para saida, Espessura e TipoAtual
         JPanel painelCoord = new JPanel(); // Painel para mensagem
         painelCoord.setLayout(new GridBagLayout());
-        painelCoord.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "COORDENADAS", 0, 0, null, corTexto));
+        painelCoord.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "saida", 0, 0, null, corTexto));
         painelCoord.setBackground(corCinzaEscuro);
         painelCoord.add(lblCoord); // Adiciona a JLabel de mensagem ao painel
 
@@ -313,4 +313,55 @@ public class MainGUI extends JFrame {
             panel.add(btnNovo, gbc);
         }
     }
+
+    public int[] infosSelect(String pergunta, String resposta) {
+        String coordenada = JOptionPane.showInputDialog(null, resposta, pergunta, JOptionPane.QUESTION_MESSAGE);
+    
+        // Regex para verificar o formato (x, y) onde x e y são números inteiros
+        String regexMover = "\\((\\d+),\\s*(\\d+)\\)";
+        
+        try {
+            if (tipoAtual == TipoPrimitivo.MOVER && coordenada != null && coordenada.matches(regexMover)) {
+                // Extrair as coordenadas x e y
+                coordenada = coordenada.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
+                String[] partes = coordenada.split(",");
+        
+                int x = Integer.parseInt(partes[0]);
+                int y = Integer.parseInt(partes[1]);
+    
+                // Verificar se x <= 1000 e y <= 600
+                if (x <= 1000 && y <= 600) {
+                    return new int[]{x, y};  // Retorna um array de inteiros com as coordenadas
+                }
+    
+            } else if (tipoAtual == TipoPrimitivo.ESCALA) {
+                // Verificar se a entrada é um inteiro positivo
+                if (coordenada != null && coordenada.matches("\\d+")) {
+                    int escala = Integer.parseInt(coordenada);
+    
+                    // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
+                    if (escala > 0 && escala <= 10) {
+                        return new int[]{escala};  // Retorna um array de inteiros com o valor da escala
+                    }
+                }
+    
+            } else if (tipoAtual == TipoPrimitivo.ROTACAO) {
+                // Verificar se a entrada é um inteiro entre -360 e 360
+                if (coordenada != null && coordenada.matches("-?\\d+")) {
+                    int rotacao = Integer.parseInt(coordenada);
+    
+                    // Verificar se o valor da rotação está dentro do intervalo -360 a 360
+                    if (rotacao >= -360 && rotacao <= 360) {
+                        return new int[]{rotacao};  // Retorna um array de inteiros com o valor da rotação
+                    }
+                }
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Erro: Entrada inválida, tente novamente.");
+        }
+        
+        // Caso a entrada seja inválida, chamar recursivamente para nova tentativa
+        return infosSelect("FORA DO FORMATO.\n" + pergunta, resposta);
+    }
+
 }
