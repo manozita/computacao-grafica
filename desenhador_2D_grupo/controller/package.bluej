@@ -1,15 +1,15 @@
 #BlueJ package file
-dependency1.from=Select
-dependency1.to=PainelDesenho
+dependency1.from=PainelDesenho
+dependency1.to=TipoPrimitivo
 dependency1.type=UsesDependency
-dependency2.from=Select
-dependency2.to=TipoPrimitivo
+dependency2.from=PainelDesenho
+dependency2.to=Select
 dependency2.type=UsesDependency
-dependency3.from=PainelDesenho
-dependency3.to=TipoPrimitivo
+dependency3.from=Select
+dependency3.to=PainelDesenho
 dependency3.type=UsesDependency
-dependency4.from=PainelDesenho
-dependency4.to=Select
+dependency4.from=Select
+dependency4.to=TipoPrimitivo
 dependency4.type=UsesDependency
 objectbench.height=138
 objectbench.width=1346

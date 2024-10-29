@@ -198,6 +198,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         else if(!tipoDeSelecao())
         {
             formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, x4, y4, getEsp(), getCorAtual());
+            x1 = y1 = x2 = y2 = x3 = y3 = x4 = y4 = null;
         }
         redesenharPainel(g);
     } 

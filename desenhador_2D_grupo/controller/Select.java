@@ -24,7 +24,6 @@ public class Select
     public Select (PainelDesenho painel) {
         this.painel = painel;
         tolerancia = painel.getEsp()/2 + 4;  // Erro do clique para deletar uma figura
-
     }
 
     public void selecionar(Integer x, Integer y) {
