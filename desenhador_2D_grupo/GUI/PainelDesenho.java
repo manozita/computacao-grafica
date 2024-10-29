@@ -1,4 +1,4 @@
-package controller;
+package GUI;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -9,6 +9,7 @@ import javax.swing.*;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import controller.*;
 
 import java.lang.Math;
 
@@ -300,16 +301,23 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public void redesenharPainel(Graphics g)    // Redesenha as figuras já presentes
     {
         for (int i = 0; i < formas.getTamanho(); i++) {
-            if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
-                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
-                FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETANGULO)
-                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), formas.getFigura(i).getX4(), formas.getFigura(i).getY4(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.CIRCULO)
-                FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.TRIANGULO)
-                FiguraRetas.desenharTriangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+            switch (formas.getFigura(i).getTipo()) {
+                case PONTO: 
+                    FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+                    break;
+                case RETA:
+                    FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+                    break;
+                case RETANGULO:
+                    FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(),  formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), formas.getFigura(i).getX4(), formas.getFigura(i).getY4(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+                    break;
+                case CIRCULO:
+                    FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+                    break;
+                case TRIANGULO:
+                    FiguraRetas.desenharTriangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), "", formas.getFigura(i).getEsp(), formas.getFigura(i).getCor());
+                    break;
+            }
         }
     }
 
@@ -317,25 +325,22 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     {
         for (int i = 0; i < formas.getTamanho(); i++)
         {
-            if(formas.getFigura(i).getTipo() == TipoPrimitivo.PONTO)
-            {
-                FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), getBackground());
-            }
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETA)
-            {
-                FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
-            }
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.RETANGULO)
-            {
-                FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(),  formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), formas.getFigura(i).getX4(), formas.getFigura(i).getY4(), "", formas.getFigura(i).getEsp(), getBackground());
-            }
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.CIRCULO)
-            {
-                FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
-            }
-            else if(formas.getFigura(i).getTipo() == TipoPrimitivo.TRIANGULO)
-            {
-                FiguraRetas.desenharTriangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), "", formas.getFigura(i).getEsp(), getBackground());
+            switch (formas.getFigura(i).getTipo()) {
+                case PONTO: 
+                    FiguraPontos.desenharPonto(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), "", formas.getFigura(i).getEsp(), getBackground());
+                    break;
+                case RETA:
+                    FiguraRetas.desenharReta(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
+                    break;
+                case RETANGULO:
+                    FiguraRetas.desenharRetangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(),  formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), formas.getFigura(i).getX4(), formas.getFigura(i).getY4(), "", formas.getFigura(i).getEsp(), getBackground());
+                    break;
+                case CIRCULO:
+                    FiguraCirculos.desenharCirculo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), "", formas.getFigura(i).getEsp(), getBackground());
+                    break;
+                case TRIANGULO:
+                    FiguraRetas.desenharTriangulo(g, formas.getFigura(i).getX1(), formas.getFigura(i).getY1(), formas.getFigura(i).getX2(), formas.getFigura(i).getY2(), formas.getFigura(i).getX3(), formas.getFigura(i).getY3(), "", formas.getFigura(i).getEsp(), getBackground());
+                    break;
             }
         }
     }
@@ -351,73 +356,73 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         return (tipo == TipoPrimitivo.DELETAR || tipo == TipoPrimitivo.ROTACAO || tipo == TipoPrimitivo.ESCALA || tipo == TipoPrimitivo.MOVER);
     }
 
-    public double[] infosSelect(String s) {
-        String pergunta, resposta;
+    // public double[] infosSelect(String s) {
+        // String pergunta, resposta;
 
-        if (s.matches("Angulo")) {
-            pergunta = "Insira o Ângulo de Rotação"; resposta = "Entre -360 e 360 graus: ";
-        } else if (s.matches("Fatores")) {
-            pergunta = "Insira Fatores de Escala"; resposta = "(x,y): ";
-        } else if (s.matches("Fator")) {
-            pergunta = "Insira um Fator de Escala"; resposta = "";
-        } else if (s.isEmpty()) {
-            pergunta = "Insira Direções para Mover"; resposta = "(x,y): ";
-        } else {
-            pergunta = "ERRO"; resposta = "ERRO";
-        }
+        // if (s.matches("Angulo")) {
+            // pergunta = "Insira o Ângulo de Rotação"; resposta = "Entre -360 e 360 graus: ";
+        // } else if (s.matches("Fatores")) {
+            // pergunta = "Insira Fatores de Escala"; resposta = "(x,y): ";
+        // } else if (s.matches("Fator")) {
+            // pergunta = "Insira um Fator de Escala"; resposta = "";
+        // } else if (s.isEmpty()) {
+            // pergunta = "Insira Direções para Mover"; resposta = "(x,y): ";
+        // } else {
+            // pergunta = "ERRO"; resposta = "ERRO";
+        // }
 
-        String resp = JOptionPane.showInputDialog(null, pergunta, resposta, JOptionPane.QUESTION_MESSAGE);
+        // String resp = JOptionPane.showInputDialog(null, pergunta, resposta, JOptionPane.QUESTION_MESSAGE);
 
-        // Regex para verificar o formato (x, y) onde x e y são números decimais positivos
-        String regexEscala = "\\(\\d+(\\.\\d+)?,\\d+(\\.\\d+)?\\)";
-        // Regex para verificar o formato (x, y) onde x e y são números inteiros positivos ou negativos
-        String regexMover = "\\((-?\\d+),(-?\\d+)\\)";
+        // // Regex para verificar o formato (x, y) onde x e y são números decimais positivos
+        // String regexEscala = "\\(\\d+(\\.\\d+)?,\\d+(\\.\\d+)?\\)";
+        // // Regex para verificar o formato (x, y) onde x e y são números inteiros positivos ou negativos
+        // String regexMover = "\\((-?\\d+),(-?\\d+)\\)";
 
-        try {
-            if (s.matches("Fatores") && resp != null && resp.matches(regexEscala)) { // FATORES DE ESCALA
-                resp = resp.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
-                String[] partes = resp.split(",");
+        // try {
+            // if (s.matches("Fatores") && resp != null && resp.matches(regexEscala)) { // FATORES DE ESCALA
+                // resp = resp.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
+                // String[] partes = resp.split(",");
 
-                double[] escala = new double[2];
-                escala[0] = Double.parseDouble(partes[0]); escala[1] = Double.parseDouble(partes[1]);
+                // double[] escala = new double[2];
+                // escala[0] = Double.parseDouble(partes[0]); escala[1] = Double.parseDouble(partes[1]);
 
-                // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
-                if (escala[0] > 0 && escala[0] <= 10 && escala[1] > 0 && escala[1] <= 10) {
-                    return escala;  // Retorna um array de inteiros com o valor da escala
-                }
-            } else if (s.matches("Fator") && resp != null && resp.matches("\\d+(\\.\\d+)?")) {
-                double[] escala = new double[1];
-                escala[0] = Double.parseDouble(resp);
+                // // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
+                // if (escala[0] > 0 && escala[0] <= 10 && escala[1] > 0 && escala[1] <= 10) {
+                    // return escala;  // Retorna um array de inteiros com o valor da escala
+                // }
+            // } else if (s.matches("Fator") && resp != null && resp.matches("\\d+(\\.\\d+)?")) {
+                // double[] escala = new double[1];
+                // escala[0] = Double.parseDouble(resp);
 
-                // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
-                if (escala[0] > 0 && escala[0] <= 10) {
-                    return escala;  // Retorna um array de inteiros com o valor da escala
-                }
-            }else if (s.matches("Angulo") && resp != null && resp.matches("-?\\d+")) { // ROTACAO
-                int rotacao = Integer.parseInt(resp);
+                // // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
+                // if (escala[0] > 0 && escala[0] <= 10) {
+                    // return escala;  // Retorna um array de inteiros com o valor da escala
+                // }
+            // }else if (s.matches("Angulo") && resp != null && resp.matches("-?\\d+")) { // ROTACAO
+                // int rotacao = Integer.parseInt(resp);
 
-                // Verificar se o valor da rotação está dentro do intervalo -360 a 360
-                if (rotacao >= -360 && rotacao <= 360) {
-                    return new double[]{rotacao};  // Retorna um array de inteiros com o valor da rotação
-                }
-            } else if (s.isEmpty() && resp != null && resp.matches("\\d+(\\.\\d+)?")) { // MOVER
-                resp = resp.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
-                String[] partes = resp.split(",");
+                // // Verificar se o valor da rotação está dentro do intervalo -360 a 360
+                // if (rotacao >= -360 && rotacao <= 360) {
+                    // return new double[]{rotacao};  // Retorna um array de inteiros com o valor da rotação
+                // }
+            // } else if (s.isEmpty() && resp != null && resp.matches("\\d+(\\.\\d+)?")) { // MOVER
+                // resp = resp.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
+                // String[] partes = resp.split(",");
 
-                int x = Integer.parseInt(partes[0]);
-                int y = Integer.parseInt(partes[1]);
+                // int x = Integer.parseInt(partes[0]);
+                // int y = Integer.parseInt(partes[1]);
 
-                // Verificar se x <= 1000 e y <= 600
-                if (x <= 1000 && y <= 600) {
-                    return new double[]{x, y};  // Retorna um array de inteiros com as resps
-                }
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Erro: Entrada inválida, tente novamente.");
-        }
+                // // Verificar se x <= 1000 e y <= 600
+                // if (x <= 1000 && y <= 600) {
+                    // return new double[]{x, y};  // Retorna um array de inteiros com as resps
+                // }
+            // }
+        // } catch (NumberFormatException e) {
+            // JOptionPane.showMessageDialog(null, "Erro: Entrada inválida, tente novamente.");
+        // }
 
-        // Caso a entrada seja inválida, chamar recursivamente para nova tentativa
-        return infosSelect(s);
-    }
+        // // Caso a entrada seja inválida, chamar recursivamente para nova tentativa
+        // return infosSelect(s);
+    // }
 
 }
