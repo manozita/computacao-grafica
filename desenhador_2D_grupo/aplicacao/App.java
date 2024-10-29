@@ -5,8 +5,6 @@ import javax.swing.JOptionPane;
 /**
  * Aplicacao para testar primitivos graficos.
  * 
- * @author Julio Arakaki 
- * @version 20220815
  */
 public class App {
     public static void main(String args[]) {

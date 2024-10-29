@@ -18,7 +18,7 @@ public class Array
         figura = new Primitivos(t, x1, y1, x2, y2, x3, y3, x4, y4, esp, c); // novo primitivo com os dados da figura
         lista.add(figura); // adiciona na lista
     }
-    
+
     /**
      * Método limparArray
      * Limpa o array totalmente
@@ -27,7 +27,7 @@ public class Array
     {
         lista.clear();
     }
-    
+
     /**
      * Método getTamanho
      *
@@ -37,7 +37,7 @@ public class Array
     {
         return lista.size();
     }
-    
+
     /**
      * Método getFigura
      *
@@ -45,9 +45,12 @@ public class Array
      */
     public Primitivos getFigura(int i)
     {
-        return lista.get(i);
+        if (i >= 0 && i < lista.size()) {
+            return lista.get(i);
+        }
+        return null;
     }
-    
+
     /**
      * Método apagarElemento
      *
@@ -57,7 +60,7 @@ public class Array
     {
         lista.remove(i);
     }
-    
+
     public void setCoordenadas(int i, int j, int x, int y)
     {
         lista.get(i).setX(j, x);
