@@ -2,6 +2,8 @@ package controller;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import javax.swing.*;
 
 import java.lang.Math;
 
@@ -21,6 +23,8 @@ public class Select
 {
     PainelDesenho painel;
     int tolerancia;
+    Integer[] coordenadas, fator = null;
+    
     public Select (PainelDesenho painel) {
         this.painel = painel;
         tolerancia = painel.getEsp()/2 + 4;  // Erro do clique para deletar uma figura
@@ -63,6 +67,11 @@ public class Select
             i--;
         }        
     }
+    
+    public void setCoordenadas(int x, int y) {
+        coordenadas = new Integer[2];
+        coordenadas[0] = x; coordenadas[1] = y;
+    }
 
     public boolean selecionarPonto(Integer x, Integer y, Integer xP, Integer yP, int i)
     {
@@ -75,18 +84,23 @@ public class Select
                 FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 painel.formas.apagarElemento(i);
             } else if(painel.getTipo() == TipoPrimitivo.MOVER) {
+                double coords[] = painel.infosSelect("");
                 FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                painel.formas.setCoordenadas(i, 0, xP+10, yP+10);
-            } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
-                FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
+                painel.formas.setCoordenadas(i, 0, xP+(int)coords[0], yP+(int)coords[1]);
             } else if(painel.getTipo() == TipoPrimitivo.ROTACAO) {
+                double theta = Math.toRadians((painel.infosSelect("Angulo"))[0]); // chama a função e descobre o ângulo
+                //painel.setTipo(TipoPrimitivo.COORDENADA);
+                
+                coordenadas = new Integer[2];
+                coordenadas[0] = 300;
+                coordenadas[1] = 300;
+                
                 FiguraPontos.desenharPonto(g, xP, yP, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                double theta = Math.toRadians(90);
 
-                // Alterar (300;300) pelo ponto (x;y) dado pelo usuário
-                xP = (int)((xP - 300)*Math.cos(theta) - (yP - 300)*Math.sin(theta) + 300); 
-                yP = (int)((xP - 300)*Math.sin(theta) + (yP - 300)*Math.cos(theta) + 300);
+                xP = (int)((xP - coordenadas[0])*Math.cos(theta) - (yP - coordenadas[1])*Math.sin(theta) + coordenadas[0]); 
+                yP = (int)((xP - coordenadas[0])*Math.sin(theta) + (yP - coordenadas[1])*Math.cos(theta) + coordenadas[1]);
                 painel.formas.setCoordenadas(i, 0, xP, yP);
+                //painel.setTipo(TipoPrimitivo.ROTACAO);
             }
             return true;
         }
@@ -107,10 +121,11 @@ public class Select
                 painel.formas.setCoordenadas(i, 0, x1R+10, y1R+10);
                 painel.formas.setCoordenadas(i, 1, x2R+10, y2R+10);
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
+                double fator[] = painel.infosSelect("Fatores");
+                double fatorDeEscalaX = fator[0]; // Fator de escala no eixo X
+                double fatorDeEscalaY = fator[1]; // Fator de escala no eixo Y
                 FiguraRetas.desenharReta(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                // Supondo que xEscala e yEscala sejam os fatores de escala em x e y respectivamente
-                double xEscala = 2; // Exemplo de fator de escala em x
-                double yEscala = 1.5; // Exemplo de fator de escala em y
+                // Supondo que fatorDeEscalaX e fatorDeEscalaY sejam os fatores de escala em x e y respectivamente
 
                 // Coordenadas do ponto clicado pelo usuário (em relação a esse ponto que a escala será aplicada)
                 double px = 300; // Coordenada x do ponto clicado
@@ -123,10 +138,10 @@ public class Select
                 double y2Deslocado = y2R - py;
 
                 // Passo 2: Aplicar a escala separadamente para x e y
-                x1Deslocado *= xEscala;
-                y1Deslocado *= yEscala;
-                x2Deslocado *= xEscala;
-                y2Deslocado *= yEscala;
+                x1Deslocado *= fatorDeEscalaX;
+                y1Deslocado *= fatorDeEscalaY;
+                x2Deslocado *= fatorDeEscalaX;
+                y2Deslocado *= fatorDeEscalaY;
 
                 // Passo 3: Deslocar de volta para o ponto (px, py)
                 x1R = (int)(px + x1Deslocado);
@@ -139,8 +154,9 @@ public class Select
                 painel.formas.setCoordenadas(i, 1, x2R, y2R); // Atualiza p2
 
             } else if(painel.getTipo() == TipoPrimitivo.ROTACAO) {
+                
+                double theta = Math.toRadians((painel.infosSelect("Angulo"))[0]); // chama a função e descobre o ângulo
                 FiguraRetas.desenharReta(g, x1R, y1R, x2R, y2R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                double theta = Math.toRadians(90); // Ângulo de rotação em radianos
 
                 // Coordenadas do ponto de rotação
                 double px = 300;
@@ -195,13 +211,12 @@ public class Select
                 painel.formas.setCoordenadas(i, 2, x3R+10, y3R+10);
                 painel.formas.setCoordenadas(i, 3, x4R+10, y4R+10);
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
+                double fator[] = painel.infosSelect("Fatores");
+                double fatorDeEscalaX = fator[0]; // Fator de escala no eixo X
+                double fatorDeEscalaY = fator[1]; // Fator de escala no eixo Y
                 FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, x3R, y3R, x4R, y4R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 // painel.formas.setCoordenadas(i, 0, x1R*2, y1R*2);
                 // painel.formas.setCoordenadas(i, 1, x2R*2, y2R*2);
-
-                // Supondo que xEscala e yEscala sejam os fatores de escala em x e y respectivamente
-                double xEscala = 2; // Exemplo de fator de escala em x
-                double yEscala = 1.5; // Exemplo de fator de escala em y
 
                 // Coordenadas do ponto de referência para a escala
                 double refX = 300;
@@ -218,14 +233,14 @@ public class Select
                 double y4Deslocado = y4R - refY;
 
                 // Aplicar a escala separadamente para x e y
-                x1Deslocado *= xEscala;
-                y1Deslocado *= yEscala;
-                x2Deslocado *= xEscala;
-                y2Deslocado *= yEscala;
-                x3Deslocado *= xEscala;
-                y3Deslocado *= yEscala;
-                x4Deslocado *= xEscala;
-                y4Deslocado *= yEscala;
+                x1Deslocado *= fatorDeEscalaX;
+                y1Deslocado *= fatorDeEscalaY;
+                x2Deslocado *= fatorDeEscalaX;
+                y2Deslocado *= fatorDeEscalaY;
+                x3Deslocado *= fatorDeEscalaX;
+                y3Deslocado *= fatorDeEscalaY;
+                x4Deslocado *= fatorDeEscalaX;
+                y4Deslocado *= fatorDeEscalaY;
 
                 // Deslocar de volta para o ponto de referência (300, 300)
                 x1R = (int)(refX + x1Deslocado);
@@ -244,9 +259,9 @@ public class Select
                 painel.formas.setCoordenadas(i, 3, x4R, y4R); // Atualiza p4
 
             } else if (painel.getTipo() == TipoPrimitivo.ROTACAO) {
+                double theta = Math.toRadians((painel.infosSelect("Angulo"))[0]); // chama a função e descobre o ângulo
                 FiguraRetas.desenharRetangulo(g, x1R, y1R, x2R, y2R, x3R, y3R, x4R, y4R, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 // Ângulo de rotação em radianos
-                double theta = Math.toRadians(45); // Exemplo de ângulo de 90 graus
 
                 // Coordenadas do ponto de referência para a rotação
                 double refX = 300;
@@ -315,9 +330,10 @@ public class Select
                 painel.formas.setCoordenadas(i, 0, xC+10, yC+10);
                 painel.formas.setCoordenadas(i, 1, xB+10, yB+10);                
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
+                double fator[] = painel.infosSelect("Fator");
+                double fatorDeEscala = fator[0]; // Fator de escala
                 FiguraCirculos.desenharCirculo(g, xC, yC, xB, yB, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 // Supondo que 'fatorDeEscala' seja o fator de escala
-                double fatorDeEscala = 2; // Exemplo de fator de escala
 
                 // Coordenadas do ponto de referência para a escala
                 double refX = 300;
@@ -370,10 +386,12 @@ public class Select
                 painel.formas.setCoordenadas(i, 1, x2T+10, y2T+10);
                 painel.formas.setCoordenadas(i, 2, x3T+10, y3T+10);
             } else if(painel.getTipo() == TipoPrimitivo.ESCALA) {
+                double fator[] = painel.infosSelect("Fatores");
+                double fatorDeEscalaX = fator[0]; // Fator de escala no eixo X
+                double fatorDeEscalaY = fator[1]; // Fator de escala no eixo Y
+                
                 FiguraRetas.desenharTriangulo(g, x1T, y1T, x2T, y2T, x3T, y3T, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
                 // Supondo que 'fatorDeEscalaX' e 'fatorDeEscalaY' sejam os fatores de escala
-                double fatorDeEscalaX = 2; // Fator de escala no eixo X
-                double fatorDeEscalaY = 1.5; // Fator de escala no eixo Y
 
                 // Coordenadas do ponto de referência para a escala
                 double refX = 300;
@@ -409,8 +427,8 @@ public class Select
                 painel.formas.setCoordenadas(i, 2, x3T, y3T); // Atualiza o ponto 3
 
             } else if(painel.getTipo() == TipoPrimitivo.ROTACAO) {
+                double theta = Math.toRadians((painel.infosSelect("Angulo"))[0]); // chama a função e descobre o ângulo
                 FiguraRetas.desenharTriangulo(g, x1T, y1T, x2T, y2T, x3T, y3T, "", painel.formas.getFigura(i).getEsp(), painel.getBackground());
-                double theta = Math.toRadians(90); // Ângulo de rotação em radianos
 
                 // Ponto de referência para a rotação
                 double refX = 300;
@@ -485,5 +503,16 @@ public class Select
 
         return new int[] {(int) novoX, (int) novoY}; // Retorna as novas coordenadas
     }
-
+    
+    public void aguardarClique() {
+        // Aguarda até que o ponto de referência seja capturado no PainelDesenho
+        while (painel.getCoordenadas() == null) {
+            try {
+                Thread.sleep(100); // Aguardando o clique do usuário
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        coordenadas = painel.getCoordenadas();
+    }
 }

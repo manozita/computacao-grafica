@@ -5,7 +5,7 @@ import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,6 +29,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     TipoPrimitivo tipo;         // Tipo do primitivo
     Color corAtual;             // Cor atual do primitivo
     int esp;                    // Espessura, diâmetro do ponto
+    Integer coordenadas[] = null; // Coordenadas para select
 
     Integer x1, y1, x2, y2, x3, y3, x4, y4, xant, yant; // Coordenadas para RETA, TRIÂNGULO e CÍRCULO
     int clickCount = 0;         // Contador de cliques para o triângulo
@@ -91,6 +92,9 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
     public JLabel getMsg () {                       // Retorna o valor da mensagem exibida no rodapé
         return this.coord;
     }
+    public Integer[] getCoordenadas() {
+        return coordenadas;
+    }
 
     /**
      * Metodo chamado quando o paint é acionado
@@ -148,6 +152,12 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
                 formas.adicionarFigura(tipo, x1, y1, x2, y2, x3, y3, x4, y4, getEsp(), getCorAtual());
                 x1 = y1 = x2 = y2 = x3 = y3 = x4 = y4 = null;
             }
+        } else if(tipo == TipoPrimitivo.COORDENADA) {
+            JOptionPane.showMessageDialog(null, "Clicou.");
+            coordenadas = new Integer[2];
+            coordenadas[0] = x1; coordenadas[1] = y1;
+            x1 = e.getX();
+            y1 = e.getY();
         }
     }     
 
@@ -187,7 +197,7 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
             this.coord.setText("("+e.getX() + ", " + e.getY() + ")");
             paint(g);
         }
-        
+
         if(tipo == TipoPrimitivo.TRIANGULO)
         {
             if(x1 != null && x2 != null && x3 != null)
@@ -336,9 +346,78 @@ public class PainelDesenho extends JPanel implements MouseListener, MouseMotionL
         limparPainel(g);
         formas.limparArray();
     }
-    
+
     private boolean tipoDeSelecao() {
         return (tipo == TipoPrimitivo.DELETAR || tipo == TipoPrimitivo.ROTACAO || tipo == TipoPrimitivo.ESCALA || tipo == TipoPrimitivo.MOVER);
+    }
+
+    public double[] infosSelect(String s) {
+        String pergunta, resposta;
+
+        if (s.matches("Angulo")) {
+            pergunta = "Insira o Ângulo de Rotação"; resposta = "Entre -360 e 360 graus: ";
+        } else if (s.matches("Fatores")) {
+            pergunta = "Insira Fatores de Escala"; resposta = "(x,y): ";
+        } else if (s.matches("Fator")) {
+            pergunta = "Insira um Fator de Escala"; resposta = "";
+        } else if (s.isEmpty()) {
+            pergunta = "Insira Direções para Mover"; resposta = "(x,y): ";
+        } else {
+            pergunta = "ERRO"; resposta = "ERRO";
+        }
+
+        String resp = JOptionPane.showInputDialog(null, pergunta, resposta, JOptionPane.QUESTION_MESSAGE);
+
+        // Regex para verificar o formato (x, y) onde x e y são números decimais positivos
+        String regexEscala = "\\(\\d+(\\.\\d+)?,\\d+(\\.\\d+)?\\)";
+        // Regex para verificar o formato (x, y) onde x e y são números inteiros positivos ou negativos
+        String regexMover = "\\((-?\\d+),(-?\\d+)\\)";
+
+        try {
+            if (s.matches("Fatores") && resp != null && resp.matches(regexEscala)) { // FATORES DE ESCALA
+                resp = resp.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
+                String[] partes = resp.split(",");
+
+                double[] escala = new double[2];
+                escala[0] = Double.parseDouble(partes[0]); escala[1] = Double.parseDouble(partes[1]);
+
+                // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
+                if (escala[0] > 0 && escala[0] <= 10 && escala[1] > 0 && escala[1] <= 10) {
+                    return escala;  // Retorna um array de inteiros com o valor da escala
+                }
+            } else if (s.matches("Fator") && resp != null && resp.matches("\\d+(\\.\\d+)?")) {
+                double[] escala = new double[1];
+                escala[0] = Double.parseDouble(resp);
+
+                // Verificar se o valor da escala é um inteiro positivo e menor ou igual a 10
+                if (escala[0] > 0 && escala[0] <= 10) {
+                    return escala;  // Retorna um array de inteiros com o valor da escala
+                }
+            }else if (s.matches("Angulo") && resp != null && resp.matches("-?\\d+")) { // ROTACAO
+                int rotacao = Integer.parseInt(resp);
+
+                // Verificar se o valor da rotação está dentro do intervalo -360 a 360
+                if (rotacao >= -360 && rotacao <= 360) {
+                    return new double[]{rotacao};  // Retorna um array de inteiros com o valor da rotação
+                }
+            } else if (s.isEmpty() && resp != null && resp.matches("\\d+(\\.\\d+)?")) { // MOVER
+                resp = resp.replaceAll("[()\\s]", ""); // Remove parênteses e espaços
+                String[] partes = resp.split(",");
+
+                int x = Integer.parseInt(partes[0]);
+                int y = Integer.parseInt(partes[1]);
+
+                // Verificar se x <= 1000 e y <= 600
+                if (x <= 1000 && y <= 600) {
+                    return new double[]{x, y};  // Retorna um array de inteiros com as resps
+                }
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Erro: Entrada inválida, tente novamente.");
+        }
+
+        // Caso a entrada seja inválida, chamar recursivamente para nova tentativa
+        return infosSelect(s);
     }
 
 }
