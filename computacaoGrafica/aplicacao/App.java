@@ -1,6 +1,5 @@
 package aplicacao;
 import GUI.*;
-import javax.swing.JOptionPane;
 
 /**
  * Aplicacao para testar primitivos graficos.

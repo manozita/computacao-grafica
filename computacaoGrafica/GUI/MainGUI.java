@@ -14,11 +14,11 @@ import java.awt.event.MouseEvent;
  */
 public class MainGUI extends JFrame {
     private TipoPrimitivo tipoAtual = TipoPrimitivo.NENHUM; // Tipo atual de primitivo inicializado como nenhum
-    private Color corAtual = Color.BLACK; // Cor padr„o inicial
-    private int espessuraAtual = 3; // Espessura padr„o inicial
+    private Color corAtual = Color.BLACK; // Cor padrÔøΩo inicial
+    private int espessuraAtual = 3; // Espessura padrÔøΩo inicial
 
-    private Dimension tamanhoBotao = new Dimension(50, 50); // Tamanho fixo dos botıes
-    private JButton btnAtual = null; // Armazena o bot„o atualmente selecionado
+    private Dimension tamanhoBotao = new Dimension(50, 50); // Tamanho fixo dos botoes
+    private JButton btnAtual = null; // Armazena o botÔøΩo atualmente selecionado
     private JLabel lblCoord = new JLabel(""); // JLabel para exibir coordenadas do mouse
     private JLabel lblEspessura = new JLabel("3px"); // JLabel para exibir a espessura atual
     private JLabel lblTipoAtual = new JLabel("NENHUM"); // JLabel para exibir o tipo atual de primitivo
@@ -27,60 +27,58 @@ public class MainGUI extends JFrame {
     PainelDesenho painelDesenho = new PainelDesenho(lblCoord, lblTipoAtual, tipoAtual, corAtual, espessuraAtual); // Painel de desenho
 
     public MainGUI() {
-        setTitle("PROGRAMA GR¡FICO"); // TÌtulo da janela principal
+        setTitle("PROGRAMA GR√ÅFICO"); // TÔøΩtulo da janela principal
         setSize(1000, 750); // Definir tamanho da janela
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Definir operaÁ„o de fechamento da janela
-        setResizable(false); // Definir a janela como n„o redimension·vel
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Definir operaÔøΩÔøΩo de fechamento da janela
+        setResizable(false); // Definir a janela como nÔøΩo redimensionÔøΩvel
         setLayout(new BorderLayout()); // Layout da janela
 
         // Definir as cores principais
         Color corCinzaEscuro = new Color(45, 45, 45); // Cor de fundo cinza escuro
-        Color corCinzaClaro = new Color(120, 120, 120); // Cor ao clicar
-        Color corCinzaClarissimo = new Color(200, 200, 200); // Cor clara para divisÛrias
-        Color corCinza = new Color(80, 80, 80); // Cor ao passar o mouse
+        Color corCinzaClarissimo = new Color(200, 200, 200); // Cor clara para divisÔøΩrias
         Color corTexto = corCinzaClarissimo; // Cor do texto
 
         // Painel principal de ferramentas
         JPanel painel1 = new JPanel();
-        painel1.setLayout(new GridLayout(1, 3, 10, 10)); // Adicionar espaÁamento entre seÁıes
+        painel1.setLayout(new GridLayout(1, 3, 10, 10)); // Adicionar espaÔøΩamento entre seÔøΩÔøΩes
         painel1.setBackground(corCinzaEscuro); // Definir cor de fundo do painel de ferramentas
 
-        // SeÁ„o IMAGEM
+        // SeÔøΩÔøΩo IMAGEM
         JPanel painelImagem = new JPanel();
-        painelImagem.setLayout(new GridBagLayout()); // Usar GridBagLayout para centralizar botıes
-        painelImagem.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "IMAGEM", 0, 0, null, corTexto)); // Borda para seÁ„o
-        painelImagem.setBackground(corCinzaEscuro); // Fundo da seÁ„o IMAGEM
-        JButton btnEspessura = criarBotao("icons/espessura.png", corCinzaEscuro); // Bot„o para selecionar espessura
-        JButton btnRotacao = criarBotao("icons/rotacao.png", corCinzaEscuro); // Bot„o para rotaÁ„o
-        JButton btnTranslacao = criarBotao("icons/mover.png", corCinzaEscuro); // Bot„o para translaÁ„o
-        JButton btnEscala = criarBotao("icons/escala.png", corCinzaEscuro); // Bot„o para escala
-        adicionarBotoesAoPainel(painelImagem, btnEspessura, btnRotacao, btnTranslacao, btnEscala); // Adicionar botıes ao painel
+        painelImagem.setLayout(new GridBagLayout()); // Usar GridBagLayout para centralizar botÔøΩes
+        painelImagem.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "IMAGEM", 0, 0, null, corTexto)); // Borda para seÔøΩÔøΩo
+        painelImagem.setBackground(corCinzaEscuro); // Fundo da seÔøΩÔøΩo IMAGEM
+        JButton btnEspessura = criarBotao("icons/espessura.png", corCinzaEscuro); // BotÔøΩo para selecionar espessura
+        JButton btnRotacao = criarBotao("icons/rotacao.png", corCinzaEscuro); // BotÔøΩo para rotaÔøΩÔøΩo
+        JButton btnTranslacao = criarBotao("icons/mover.png", corCinzaEscuro); // BotÔøΩo para translaÔøΩÔøΩo
+        JButton btnEscala = criarBotao("icons/escala.png", corCinzaEscuro); // BotÔøΩo para escala
+        adicionarBotoesAoPainel(painelImagem, btnEspessura, btnRotacao, btnTranslacao, btnEscala); // Adicionar botÔøΩes ao painel
 
-        // SeÁ„o FORMAS
+        // SeÔøΩÔøΩo FORMAS
         JPanel painelFormas = new JPanel();
-        painelFormas.setLayout(new GridBagLayout()); // Usar GridBagLayout para centralizar botıes
-        painelFormas.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "FORMAS", 0, 0, null, corTexto)); // Borda para seÁ„o
-        painelFormas.setBackground(corCinzaEscuro); // Fundo da seÁ„o FORMAS
-        JButton btnRetangulo = criarBotao("icons/retangulo.png", corCinzaEscuro); // Bot„o para desenhar ret‚ngulo
-        JButton btnCirculo = criarBotao("icons/circulo.png", corCinzaEscuro); // Bot„o para desenhar cÌrculo
-        JButton btnTriangulo = criarBotao("icons/triangulo.png", corCinzaEscuro); // Bot„o para desenhar tri‚ngulo
-        JButton btnPonto = criarBotao("icons/ponto.png", corCinzaEscuro); // Bot„o para desenhar ponto
-        JButton btnReta = criarBotao("icons/linha.png", corCinzaEscuro); // Bot„o para desenhar reta
-        adicionarBotoesAoPainel(painelFormas, btnRetangulo, btnCirculo, btnTriangulo, btnPonto, btnReta); // Adicionar botıes ao painel
+        painelFormas.setLayout(new GridBagLayout()); // Usar GridBagLayout para centralizar botÔøΩes
+        painelFormas.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "FORMAS", 0, 0, null, corTexto)); // Borda para seÔøΩÔøΩo
+        painelFormas.setBackground(corCinzaEscuro); // Fundo da seÔøΩÔøΩo FORMAS
+        JButton btnRetangulo = criarBotao("icons/retangulo.png", corCinzaEscuro); // BotÔøΩo para desenhar retÔøΩngulo
+        JButton btnCirculo = criarBotao("icons/circulo.png", corCinzaEscuro); // BotÔøΩo para desenhar cÔøΩrculo
+        JButton btnTriangulo = criarBotao("icons/triangulo.png", corCinzaEscuro); // BotÔøΩo para desenhar triÔøΩngulo
+        JButton btnPonto = criarBotao("icons/ponto.png", corCinzaEscuro); // BotÔøΩo para desenhar ponto
+        JButton btnReta = criarBotao("icons/linha.png", corCinzaEscuro); // BotÔøΩo para desenhar reta
+        adicionarBotoesAoPainel(painelFormas, btnRetangulo, btnCirculo, btnTriangulo, btnPonto, btnReta); // Adicionar botÔøΩes ao painel
 
-        // SeÁ„o FERRAMENTAS
+        // SeÔøΩÔøΩo FERRAMENTAS
         JPanel painelFerramentas = new JPanel();
-        painelFerramentas.setLayout(new GridBagLayout()); // Usar GridBagLayout para centralizar botıes
-        painelFerramentas.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "FERRAMENTAS", 0, 0, null, corTexto)); // Borda para seÁ„o
-        painelFerramentas.setBackground(corCinzaEscuro); // Fundo da seÁ„o FERRAMENTAS
-        JButton btnDeletar = criarBotao("icons/deletar.png", corCinzaEscuro); // Bot„o para deletar figura
-        JButton btnLimpar = criarBotao("icons/limpar.png", corCinzaEscuro); // Bot„o para limpar o painel
-        JButton btnColorir = criarBotao("icons/colorir.png", corCinzaEscuro); // Bot„o para escolher cor
-        adicionarBotoesAoPainel(painelFerramentas, btnDeletar, btnLimpar, btnColorir); // Adicionar botıes ao painel
+        painelFerramentas.setLayout(new GridBagLayout()); // Usar GridBagLayout para centralizar botÔøΩes
+        painelFerramentas.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "FERRAMENTAS", 0, 0, null, corTexto)); // Borda para seÔøΩÔøΩo
+        painelFerramentas.setBackground(corCinzaEscuro); // Fundo da seÔøΩÔøΩo FERRAMENTAS
+        JButton btnDeletar = criarBotao("icons/deletar.png", corCinzaEscuro); // BotÔøΩo para deletar figura
+        JButton btnLimpar = criarBotao("icons/limpar.png", corCinzaEscuro); // BotÔøΩo para limpar o painel
+        JButton btnColorir = criarBotao("icons/colorir.png", corCinzaEscuro); // BotÔøΩo para escolher cor
+        adicionarBotoesAoPainel(painelFerramentas, btnDeletar, btnLimpar, btnColorir); // Adicionar botÔøΩes ao painel
 
-        painel1.add(painelImagem); // Adicionar seÁ„o IMAGEM ao painel principal
-        painel1.add(painelFormas); // Adicionar seÁ„o FORMAS ao painel principal
-        painel1.add(painelFerramentas); // Adicionar seÁ„o FERRAMENTAS ao painel principal
+        painel1.add(painelImagem); // Adicionar seÔøΩÔøΩo IMAGEM ao painel principal
+        painel1.add(painelFormas); // Adicionar seÔøΩÔøΩo FORMAS ao painel principal
+        painel1.add(painelFerramentas); // Adicionar seÔøΩÔøΩo FERRAMENTAS ao painel principal
 
         // Painel de desenho
         JPanel painel2 = new JPanel();
@@ -99,58 +97,58 @@ public class MainGUI extends JFrame {
         lblTipoAtual.setForeground(corCinzaClarissimo); // Define a cor do texto do tipo atual
         lblTipoAtual.setFont(new Font("Arial", Font.PLAIN, 16)); // Define a fonte do tipo atual
 
-        // PainÈis individuais para saÌda, espessura e tipo atual
+        // PainÔøΩis individuais para saÔøΩda, espessura e tipo atual
         JPanel painelCoord = new JPanel(); // Painel para exibir coordenadas do mouse
         painelCoord.setLayout(new GridBagLayout());
-        painelCoord.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "COORDENADAS", 0, 0, null, corTexto)); // TÌtulo "saida"
+        painelCoord.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "COORDENADAS", 0, 0, null, corTexto)); // TÔøΩtulo "saida"
         painelCoord.setBackground(corCinzaEscuro); // Cor de fundo
         painelCoord.add(lblCoord); // Adicionar JLabel ao painel de coordenadas
 
         JPanel painelEspessura = new JPanel(); // Painel para exibir espessura
         painelEspessura.setLayout(new GridBagLayout());
-        painelEspessura.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "ESPESSURA", 0, 0, null, corTexto)); // TÌtulo "ESPESSURA"
+        painelEspessura.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "ESPESSURA", 0, 0, null, corTexto)); // TÔøΩtulo "ESPESSURA"
         painelEspessura.setBackground(corCinzaEscuro); // Cor de fundo
         painelEspessura.add(lblEspessura); // Adicionar JLabel ao painel de espessura
         
         JPanel painelTipoPrimitivo = new JPanel(); // Painel para exibir tipo atual
         painelTipoPrimitivo.setLayout(new GridBagLayout());
-        painelTipoPrimitivo.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "TIPO ATUAL", 0, 0, null, corTexto)); // TÌtulo "TIPO ATUAL"
+        painelTipoPrimitivo.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(corCinzaClarissimo), "TIPO ATUAL", 0, 0, null, corTexto)); // TÔøΩtulo "TIPO ATUAL"
         painelTipoPrimitivo.setBackground(corCinzaEscuro); // Cor de fundo
         painelTipoPrimitivo.add(lblTipoAtual); // Adicionar JLabel ao painel de tipo atual
 
-        // Painel principal para juntar as informaÁıes
+        // Painel principal para juntar as informaÔøΩÔøΩes
         JPanel painelInfos = new JPanel();
-        painelInfos.setLayout(new GridLayout(1, 3, 10, 10)); // Layout com 3 colunas para as informaÁıes
+        painelInfos.setLayout(new GridLayout(1, 3, 10, 10)); // Layout com 3 colunas para as informaÔøΩÔøΩes
         painelInfos.setBackground(corCinzaEscuro); // Fundo cinza escuro
         painelInfos.add(painelCoord); // Adicionar o painel de coordenadas
         painelInfos.add(painelTipoPrimitivo); // Adicionar o painel de tipo atual
         painelInfos.add(painelEspessura); // Adicionar o painel de espessura
 
         painel2.add(painelDesenho, BorderLayout.CENTER); // Adicionar painel de desenho ao centro
-        painel2.add(painelInfos, BorderLayout.NORTH); // Adicionar painel de informaÁıes na parte superior
+        painel2.add(painelInfos, BorderLayout.NORTH); // Adicionar painel de informaÔøΩÔøΩes na parte superior
 
         add(painel1, BorderLayout.NORTH); // Adicionar painel de ferramentas ao topo
         add(painel2, BorderLayout.CENTER); // Adicionar painel de desenho ao centro
 
-        // AÁ„o do bot„o de limpar
+        // AÔøΩÔøΩo do botÔøΩo de limpar
         btnLimpar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 painelDesenho.restaurarPainel(); // Limpa todas as figuras do painel de desenho
             }
         });
-        // AÁ„o do bot„o de selecionar espessura
+        // AÔøΩÔøΩo do botÔøΩo de selecionar espessura
         btnEspessura.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (popupEspessura.isShowing()) {
-                    popupEspessura.setVisible(false); // Se o menu j· estiver visÌvel, esconda-o
+                    popupEspessura.setVisible(false); // Se o menu jÔøΩ estiver visÔøΩvel, esconda-o
                 } else {
-                    popupEspessura.show(btnEspessura, 0, btnEspessura.getHeight()); // Mostra o menu abaixo do bot„o
+                    popupEspessura.show(btnEspessura, 0, btnEspessura.getHeight()); // Mostra o menu abaixo do botÔøΩo
                 }
             }
         });
-        // AÁ„o dos botıes de desenho para definir o tipo atual
+        // AÔøΩÔøΩo dos botÔøΩes de desenho para definir o tipo atual
         btnPonto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -191,18 +189,18 @@ public class MainGUI extends JFrame {
                 painelDesenho.setTipo(tipoAtual);
             }
         });
-        // AÁ„o do bot„o de colorir
+        // AÔøΩÔøΩo do botÔøΩo de colorir
         btnColorir.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Color corNova = JColorChooser.showDialog(null, "Escolha uma Cor", corAtual); // Abre di·logo para escolher uma nova cor
+                Color corNova = JColorChooser.showDialog(null, "Escolha uma Cor", corAtual); // Abre diÔøΩlogo para escolher uma nova cor
                 if (corNova != null) {
                     corAtual = corNova; // Atualiza a cor atual
                 }
                 painelDesenho.setCorAtual(corAtual); // Define a cor no painel de desenho
             }
         });
-        // AÁ„o do bot„o de deletar
+        // AÔøΩÔøΩo do botÔøΩo de deletar
         btnDeletar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -211,7 +209,7 @@ public class MainGUI extends JFrame {
                 painelDesenho.setTipo(tipoAtual);
             }
         });
-        // AÁ„o do bot„o de translaÁ„o
+        // AÔøΩÔøΩo do botÔøΩo de translaÔøΩÔøΩo
         btnTranslacao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -220,7 +218,7 @@ public class MainGUI extends JFrame {
                 painelDesenho.setTipo(tipoAtual);
             }
         });
-        // AÁ„o do bot„o de escala
+        // AÔøΩÔøΩo do botÔøΩo de escala
         btnEscala.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -229,24 +227,24 @@ public class MainGUI extends JFrame {
                 painelDesenho.setTipo(tipoAtual);
             }
         });
-        // AÁ„o do bot„o de rotaÁ„o
+        // AÔøΩÔøΩo do botÔøΩo de rotaÔøΩÔøΩo
         btnRotacao.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                lblTipoAtual.setText("ROTA«√O DA FIGURA");
+                lblTipoAtual.setText("ROTAÔøΩÔøΩO DA FIGURA");
                 tipoAtual = TipoPrimitivo.ROTACAO;
                 painelDesenho.setTipo(tipoAtual);
             }
         });
-        // ConfiguraÁ„o do menu pop-up para redimensionar
-        popupEspessura = new JPopupMenu(); // CriaÁ„o do menu pop-up para opÁıes de espessura
-        String[] opcEspessura = {"3px", "5px", "8px", "15px", "20px"}; // OpÁıes de espessura disponÌveis
+        // ConfiguraÔøΩÔøΩo do menu pop-up para redimensionar
+        popupEspessura = new JPopupMenu(); // CriaÔøΩÔøΩo do menu pop-up para opÔøΩÔøΩes de espessura
+        String[] opcEspessura = {"3px", "5px", "8px", "15px", "20px"}; // OpÔøΩÔøΩes de espessura disponÔøΩveis
         for (String option : opcEspessura) {
-            JMenuItem itemMenu = new JMenuItem(option); // Cria item do menu para cada opÁ„o de espessura
+            JMenuItem itemMenu = new JMenuItem(option); // Cria item do menu para cada opÔøΩÔøΩo de espessura
             itemMenu.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Atualiza a espessura e a exibiÁ„o no painel
+                    // Atualiza a espessura e a exibiÔøΩÔøΩo no painel
                     espessuraAtual = Integer.parseInt(option.replace("px", "")); // Converte o valor de espessura para inteiro
                     painelDesenho.setEsp(espessuraAtual); // Atualiza a espessura no painel de desenho
                     lblEspessura.setText(option); // Atualiza o JLabel de espessura
@@ -256,32 +254,32 @@ public class MainGUI extends JFrame {
         }
     }
 
-    // CriaÁ„o de botıes quadrados com Ìcones
+    // CriaÔøΩÔøΩo de botÔøΩes quadrados com ÔøΩcones
     private JButton criarBotao(String localIcone, Color corDeFundo) {
-        // Carregar a imagem do Ìcone original
-        ImageIcon icone = new ImageIcon(getClass().getResource("/" + localIcone)); // Carrega o Ìcone do arquivo
+        // Carregar a imagem do ÔøΩcone original
+        ImageIcon icone = new ImageIcon(getClass().getResource("/" + localIcone)); // Carrega o ÔøΩcone do arquivo
 
-        // Redimensionar a imagem para caber no bot„o (50x50 pixels)
+        // Redimensionar a imagem para caber no botÔøΩo (50x50 pixels)
         Image image = icone.getImage().getScaledInstance(tamanhoBotao.width, tamanhoBotao.height, Image.SCALE_SMOOTH); // Redimensiona a imagem
 
         // Criar novo ImageIcon com a imagem redimensionada
         ImageIcon scaledIcon = new ImageIcon(image); // Cria ImageIcon a partir da imagem redimensionada
 
-        // Criar o bot„o quadrado com o Ìcone redimensionado
+        // Criar o botÔøΩo quadrado com o ÔøΩcone redimensionado
         JButton btnNovo = new JButton(scaledIcon);
-        btnNovo.setPreferredSize(tamanhoBotao); // Define o tamanho preferencial do bot„o
-        btnNovo.setMaximumSize(tamanhoBotao); // Define o tamanho m·ximo do bot„o
+        btnNovo.setPreferredSize(tamanhoBotao); // Define o tamanho preferencial do botÔøΩo
+        btnNovo.setMaximumSize(tamanhoBotao); // Define o tamanho mÔøΩximo do botÔøΩo
         btnNovo.setFocusable(false); // Remover foco visual
-        btnNovo.setContentAreaFilled(false); // Fundo transparente por padr„o
+        btnNovo.setContentAreaFilled(false); // Fundo transparente por padrÔøΩo
         btnNovo.setBorderPainted(false); // Sem borda ao redor
         btnNovo.setBackground(corDeFundo); // Define a cor de fundo
-        btnNovo.setOpaque(true); // Tornar a cor de fundo visÌvel
+        btnNovo.setOpaque(true); // Tornar a cor de fundo visÔøΩvel
 
         // Adicionando efeito de hover
         btnNovo.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                // Altera a cor ao passar o mouse se o bot„o n„o estiver selecionado
+                // Altera a cor ao passar o mouse se o botÔøΩo nÔøΩo estiver selecionado
                 if (btnAtual != btnNovo) {
                     btnNovo.setBackground(new Color(80, 80, 80)); // Cor ao passar o mouse
                 }
@@ -289,40 +287,40 @@ public class MainGUI extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                // Volta ‡ cor original se o bot„o n„o estiver selecionado
+                // Volta ÔøΩ cor original se o botÔøΩo nÔøΩo estiver selecionado
                 if (btnAtual != btnNovo) {
                     btnNovo.setBackground(corDeFundo);
                 }
             }
-            // Para botıes de reclique
+            // Para botÔøΩes de reclique
             public void mousePressed(MouseEvent e) {
-                // Se j· existe um bot„o selecionado, redefine sua cor
+                // Se jÔøΩ existe um botÔøΩo selecionado, redefine sua cor
                 if (btnAtual != null) {
-                    btnAtual.setBackground(corDeFundo); // Volta ‡ cor original
+                    btnAtual.setBackground(corDeFundo); // Volta ÔøΩ cor original
                 }
-                // Manter cor especial para determinados botıes
+                // Manter cor especial para determinados botÔøΩes
                 if (localIcone == "icons/colorir.png" || localIcone == "icons/limpar.png" || localIcone == "icons/espessura.png"
                 ||  localIcone == "icons/mover.png" || localIcone == "icons/escala.png" || localIcone == "icons/rotacao.png") {
-                    btnNovo.setBackground(corDeFundo); // MantÈm a cor ao clicar
-                    btnAtual = null; // Nenhum bot„o atualmente selecionado
+                    btnNovo.setBackground(corDeFundo); // MantÔøΩm a cor ao clicar
+                    btnAtual = null; // Nenhum botÔøΩo atualmente selecionado
                 } else {
                     btnNovo.setBackground(new Color(120, 120, 120)); // Cor ao clicar
-                    btnAtual = btnNovo; // Atualiza o bot„o selecionado
+                    btnAtual = btnNovo; // Atualiza o botÔøΩo selecionado
                 }
             }
         });
-        return btnNovo; // Retorna o bot„o criado
+        return btnNovo; // Retorna o botÔøΩo criado
     }
 
-    // MÈtodo para adicionar botıes centralizados em um painel usando GridBagLayout
+    // MÔøΩtodo para adicionar botÔøΩes centralizados em um painel usando GridBagLayout
     private void adicionarBotoesAoPainel(JPanel panel, JButton... btnNovos) {
-        GridBagConstraints gbc = new GridBagConstraints(); // ConfiguraÁıes para posicionamento
+        GridBagConstraints gbc = new GridBagConstraints(); // ConfiguraÔøΩÔøΩes para posicionamento
         gbc.gridx = GridBagConstraints.RELATIVE; // Posicionamento relativo no eixo X
         gbc.gridy = GridBagConstraints.RELATIVE; // Posicionamento relativo no eixo Y
-        gbc.insets = new Insets(5, 5, 5, 5); // EspaÁamento entre botıes
-        gbc.anchor = GridBagConstraints.CENTER; // Centralizar os botıes
+        gbc.insets = new Insets(5, 5, 5, 5); // EspaÔøΩamento entre botÔøΩes
+        gbc.anchor = GridBagConstraints.CENTER; // Centralizar os botÔøΩes
         for (JButton btnNovo : btnNovos) {
-            panel.add(btnNovo, gbc); // Adiciona cada bot„o ao painel com as configuraÁıes definidas
+            panel.add(btnNovo, gbc); // Adiciona cada botÔøΩo ao painel com as configuraÔøΩÔøΩes definidas
         }
     }
 
