@@ -82,6 +82,13 @@ public class ProcessadorDeImagens extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Método para adicionar botões de edição ao painel de edição.
+     *
+     * @param nome Nome do botão.
+     * @param painel Painel onde o botão será adicionado.
+     * @param acao Ação a ser executada ao clicar no botão.
+     */
     private void adicionarBotaoEdicao(String nome, JPanel painel, ActionListener acao) {
         JButton botao = new JButton(nome);
         configurarBotao(botao);
@@ -89,6 +96,11 @@ public class ProcessadorDeImagens extends JFrame {
         painel.add(botao);
     }
 
+    /**
+     * Método para configurar os botões da interface.
+     *
+     * @param botao Botão que será configurado.
+     */
     private void configurarBotao(JButton botao) {
         botao.setBackground(Color.DARK_GRAY);
         botao.setForeground(Color.WHITE);
@@ -200,16 +212,28 @@ public class ProcessadorDeImagens extends JFrame {
      */
     private void aplicarFiltroPassaBaixa() {
         if (imagemProcessada != null) {
-            // Kernel de média 3x3
+
+            // Matriz Kernel que representa a vizinhança de cada pixel
+            // cada valor do kernel é 1/9, para que a soma dos pesos seja igual a 1
             float[] kernel = {
                     1f / 9f, 1f / 9f, 1f / 9f,
                     1f / 9f, 1f / 9f, 1f / 9f,
                     1f / 9f, 1f / 9f, 1f / 9f
             };
+
+            // Cada pixel será substituído pela média dos seus valores vizinhos.
+    
+            // ConvolveOp aplica a convolução da imagem com o kernel
             ConvolveOp op = new ConvolveOp(
-                    new Kernel(3, 3, kernel),
-                    ConvolveOp.EDGE_NO_OP, null);
+                    new Kernel(3, 3, kernel),  // Cria um kernel de 3x3 com os valores definidos
+                    ConvolveOp.EDGE_NO_OP,     // Define a estratégia de borda (EDGE_NO_OP = sem alteração nas bordas)
+                    null                       // Não necessita de uma RenderingHints (pode ser nulo)
+            );
+    
+            // Aplica o filtro (a convolução) à imagem processada
             imagemProcessada = op.filter(imagemProcessada, null);
+    
+            // Exibe a imagem suavizada na interface
             exibirImagem(imagemProcessada);
         } else {
             JOptionPane.showMessageDialog(this, "Carregue uma imagem primeiro.");
@@ -221,16 +245,27 @@ public class ProcessadorDeImagens extends JFrame {
      */
     private void aplicarFiltroPassaAlta() {
         if (imagemProcessada != null) {
-            // Kernel de detecção de bordas 3x3
+            // Este kernel aplica um realce ao pixel central e subtrai a influência dos vizinhos
+            // que cria um efeito que destaca as bordas e as áreas de transição de contraste
             float[] kernel = {
                     -1f, -1f, -1f,
-                    -1f, 8f, -1f,
+                    -1f,  8f, -1f,
                     -1f, -1f, -1f
             };
+    
+            // Remove áreas suaves e destaca áreas onde há uma mudança abrupta no valor dos pixels.
+    
+            // ConvolveOp aplica a convolução da imagem com o kernel
             ConvolveOp op = new ConvolveOp(
-                    new Kernel(3, 3, kernel),
-                    ConvolveOp.EDGE_NO_OP, null);
+                    new Kernel(3, 3, kernel),  // Cria um kernel de 3x3 com os valores definidos
+                    ConvolveOp.EDGE_NO_OP,     // Define a estratégia de borda (EDGE_NO_OP = sem alteração nas bordas)
+                    null                       // Não necessita de uma RenderingHints (pode ser nulo)
+            );
+    
+            // Aplica o filtro (a convolução) à imagem processada
             imagemProcessada = op.filter(imagemProcessada, null);
+    
+            // Exibe a imagem com bordas destacadas na interface
             exibirImagem(imagemProcessada);
         } else {
             JOptionPane.showMessageDialog(this, "Carregue uma imagem primeiro.");
@@ -257,11 +292,42 @@ public class ProcessadorDeImagens extends JFrame {
         if (imagemProcessada != null) {
             JFileChooser seletorArquivo = new JFileChooser();
             seletorArquivo.setDialogTitle("Salvar Imagem");
+    
+            // Configura os filtros de extensão de arquivo para PNG e JPG
+            FileNameExtensionFilter filtroPNG = new FileNameExtensionFilter(
+                    "PNG Imagem (*.png)", "png");
+            FileNameExtensionFilter filtroJPG = new FileNameExtensionFilter(
+                    "JPG Imagem (*.jpg, *.jpeg)", "jpg", "jpeg");
+    
+            // Adiciona ambos os filtros ao JFileChooser
+            seletorArquivo.addChoosableFileFilter(filtroPNG);
+            seletorArquivo.addChoosableFileFilter(filtroJPG);
+    
+            // Define o filtro padrão como PNG
+            seletorArquivo.setFileFilter(filtroPNG);
+    
             int resultado = seletorArquivo.showSaveDialog(this);
             if (resultado == JFileChooser.APPROVE_OPTION) {
                 try {
                     File arquivoSaida = seletorArquivo.getSelectedFile();
-                    ImageIO.write(imagemProcessada, "png", arquivoSaida);
+                    String caminhoArquivo = arquivoSaida.getAbsolutePath().toLowerCase();
+    
+                    // Verifica qual filtro está selecionado e define o formato
+                    String formatoArquivo; // Formato padrão
+                    FileNameExtensionFilter filtroSelecionado = (FileNameExtensionFilter) seletorArquivo.getFileFilter();
+                    if (filtroSelecionado == filtroJPG) {
+                        formatoArquivo = "jpg";
+                    } else {
+                        formatoArquivo = "png";
+                    }
+    
+                    // Adiciona a extensão correta se o usuário não a forneceu
+                    if (!caminhoArquivo.endsWith("." + formatoArquivo)) {
+                        arquivoSaida = new File(arquivoSaida.getAbsolutePath() + "." + formatoArquivo);
+                    }
+    
+                    // Salva a imagem processada no formato determinado
+                    ImageIO.write(imagemProcessada, formatoArquivo, arquivoSaida);
                     JOptionPane.showMessageDialog(this, "Imagem salva com sucesso.");
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this, "Erro ao salvar a imagem.");
@@ -271,4 +337,5 @@ public class ProcessadorDeImagens extends JFrame {
             JOptionPane.showMessageDialog(this, "Não há imagem para salvar.");
         }
     }
+    
 }
